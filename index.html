@@ -13,6 +13,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
   header{background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;text-align:center;padding:48px 16px 40px}
+  .logo{width:96px;height:96px;display:block;margin:0 auto 10px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
   header h1{font-family:'Frank Ruhl Libre',serif;font-size:2.4rem;letter-spacing:1px}
   header p{opacity:.9;margin-top:6px}
   .flag{display:flex;justify-content:center;gap:4px;margin-top:14px}
@@ -26,6 +27,7 @@
   .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   button{width:100%;margin-top:22px;padding:14px;border:0;border-radius:12px;background:var(--accent);color:#fff;font:inherit;font-weight:700;font-size:1.05rem;cursor:pointer}
   button:hover{background:var(--accent-dark)}
+  button:disabled{opacity:.6;cursor:wait}
   .hidden{display:none}
   .done{text-align:center}
   .done .check{width:64px;height:64px;border-radius:50%;background:var(--green);color:#fff;font-size:2rem;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
@@ -45,6 +47,29 @@
 <body>
 
 <header>
+  <svg class="logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="לוגו טרטוריה בלה">
+    <circle cx="60" cy="60" r="56" fill="#fdf6ec" stroke="#e8c9a0" stroke-width="4"/>
+    <circle cx="60" cy="60" r="46" fill="none" stroke="#a63d2a" stroke-width="2" stroke-dasharray="3 4"/>
+    <!-- ענף זית שמאל -->
+    <path d="M30 78 Q24 58 34 40" fill="none" stroke="#3f6b3a" stroke-width="2.5" stroke-linecap="round"/>
+    <ellipse cx="27" cy="66" rx="3.5" ry="7" fill="#3f6b3a" transform="rotate(-25 27 66)"/>
+    <ellipse cx="27" cy="53" rx="3.5" ry="7" fill="#5c8a52" transform="rotate(-5 27 53)"/>
+    <ellipse cx="32" cy="43" rx="3.5" ry="7" fill="#3f6b3a" transform="rotate(20 32 43)"/>
+    <!-- ענף זית ימין -->
+    <path d="M90 78 Q96 58 86 40" fill="none" stroke="#3f6b3a" stroke-width="2.5" stroke-linecap="round"/>
+    <ellipse cx="93" cy="66" rx="3.5" ry="7" fill="#3f6b3a" transform="rotate(25 93 66)"/>
+    <ellipse cx="93" cy="53" rx="3.5" ry="7" fill="#5c8a52" transform="rotate(5 93 53)"/>
+    <ellipse cx="88" cy="43" rx="3.5" ry="7" fill="#3f6b3a" transform="rotate(-20 88 43)"/>
+    <!-- מזלג -->
+    <g fill="#a63d2a">
+      <rect x="57.5" y="52" width="5" height="34" rx="2.5"/>
+      <path d="M50 30 v14 a10 10 0 0 0 20 0 v-14 h-3 v13 h-3 v-13 h-2.5 v13 h-3 v-13 h-2.5 v13 h-3 v-13 z"/>
+    </g>
+    <!-- פס דגל -->
+    <rect x="44" y="92" width="10" height="4" rx="2" fill="#3f6b3a"/>
+    <rect x="55" y="92" width="10" height="4" rx="2" fill="#ffffff" stroke="#e8c9a0" stroke-width="0.8"/>
+    <rect x="66" y="92" width="10" height="4" rx="2" fill="#a63d2a"/>
+  </svg>
   <h1>טרטוריה בלה</h1>
   <p>מטבח איטלקי ביתי · פסטה טרייה · פיצה מתנור עצים</p>
   <div class="flag"><span style="background:#3f6b3a"></span><span style="background:#fff"></span><span style="background:#e0a090"></span></div>
@@ -91,13 +116,6 @@
     <button onclick="newBooking()">הזמנה נוספת</button>
   </div>
 
-  <!-- מסך צוות -->
-  <div class="card hidden" id="staffCard">
-    <h2>הזמנות (מסך צוות)</h2>
-    <div id="staffList"></div>
-    <button onclick="closeStaff()">חזרה</button>
-  </div>
-
   <div class="info">
     <div><b>שעות פתיחה</b>א׳–ה׳ 12:00–23:00<br>ו׳ 12:00–16:00</div>
     <div><b>כתובת</b>רחוב הדוגמה 1<br>תל אביב</div>
@@ -105,7 +123,7 @@
 </main>
 
 <footer>
-  © טרטוריה בלה · <button class="staff-link" onclick="openStaff()">כניסת צוות</button>
+  © טרטוריה בלה
 </footer>
 
 <script>
@@ -128,19 +146,19 @@
   const today = new Date().toISOString().split('T')[0];
   dateInput.min = today; dateInput.value = today;
 
-  function loadBookings(){
-    try { return JSON.parse(localStorage.getItem('bookings') || '[]'); } catch(e){ return []; }
-  }
-  function saveBookings(list){
-    try { localStorage.setItem('bookings', JSON.stringify(list)); } catch(e){}
-  }
   function show(id){
-    ['formCard','doneCard','staffCard'].forEach(c => document.getElementById(c).classList.toggle('hidden', c !== id));
+    ['formCard','doneCard'].forEach(c => document.getElementById(c).classList.toggle('hidden', c !== id));
     window.scrollTo({top:0,behavior:'smooth'});
   }
 
-  document.getElementById('bookingForm').addEventListener('submit', e => {
+  // כתובת השרת (Google Apps Script)
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwaLQ8yLOg7c4Uej48bDJVRuxUm8Lzquah6JRpjYImPIse3wdbhkVfiRIO7atgq3Hn0/exec';
+
+  const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  document.getElementById('bookingForm').addEventListener('submit', async e => {
     e.preventDefault();
+    const btn = e.target.querySelector('button[type=submit]');
     const b = {
       name: document.getElementById('name').value.trim(),
       phone: document.getElementById('phone').value.trim(),
@@ -149,28 +167,26 @@
       guests: guestSel.value,
       notes: document.getElementById('notes').value.trim()
     };
-    const list = loadBookings(); list.push(b); saveBookings(list);
+    btn.disabled = true; btn.textContent = 'שולח...';
+    try {
+      const res = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) });
+      const r = await res.json();
+      if (!r.ok) throw new Error(r.error || 'error');
+    } catch (err) {
+      alert('לא הצלחנו לשלוח את ההזמנה. נסו שוב בעוד רגע, או התקשרו למסעדה.');
+      btn.disabled = false; btn.textContent = 'אישור הזמנה';
+      return;
+    }
+    btn.disabled = false; btn.textContent = 'אישור הזמנה';
     const d = new Date(b.date).toLocaleDateString('he-IL');
     document.getElementById('summary').innerHTML =
-      `<b>${b.name}</b><br>📅 ${d} בשעה ${b.time}<br>👥 ${b.guests} סועדים<br>📱 ${b.phone}` +
-      (b.notes ? `<br>📝 ${b.notes}` : '');
+      `<b>${esc(b.name)}</b><br>📅 ${d} בשעה ${b.time}<br>👥 ${b.guests} סועדים<br>📱 ${esc(b.phone)}` +
+      (b.notes ? `<br>📝 ${esc(b.notes)}` : '');
     show('doneCard');
   });
 
   function newBooking(){ document.getElementById('bookingForm').reset(); dateInput.value = today; guestSel.value = 2; show('formCard'); }
 
-  function openStaff(){
-    const list = loadBookings().sort((a,b) => (a.date + a.time).localeCompare(b.date + b.time));
-    const box = document.getElementById('staffList');
-    if (!list.length) { box.innerHTML = '<p class="empty">אין עדיין הזמנות</p>'; }
-    else {
-      box.innerHTML = '<table><tr><th>תאריך</th><th>שעה</th><th>שם</th><th>סועדים</th><th>טלפון</th></tr>' +
-        list.map(b => `<tr><td>${new Date(b.date).toLocaleDateString('he-IL')}</td><td>${b.time}</td><td>${b.name}</td><td>${b.guests}</td><td>${b.phone}</td></tr>`).join('') +
-        '</table>';
-    }
-    show('staffCard');
-  }
-  function closeStaff(){ show('formCard'); }
 </script>
 </body>
 </html>
