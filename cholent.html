@@ -118,7 +118,19 @@
   .dish p{font-size:.88rem;color:#6b5a43;line-height:1.35}
   .dish .price{font-family:'Suez One',serif;color:var(--red);font-size:1.15rem;white-space:nowrap}
   .star{display:inline-block;font-size:.72rem;background:var(--gold);color:var(--deep);border-radius:6px;padding:0 6px;margin-inline-start:6px;vertical-align:middle;font-weight:700}
+  .menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:6px}
+  @media(min-width:520px){.menu-grid{grid-template-columns:repeat(3,1fr)}}
+  .mcard{position:relative;background:#fffaf0;border:2px solid var(--gold);border-radius:16px;overflow:hidden;text-align:center;box-shadow:0 6px 16px rgba(15,58,42,.18);display:flex;flex-direction:column}
+  .mcard .pic{aspect-ratio:1/1;background:radial-gradient(circle at 50% 40%,#fff7e2,#ecd7a6);display:flex;align-items:center;justify-content:center;border-bottom:2px solid var(--gold)}
+  .mcard .pic svg{width:92%;height:92%}
+  .mcard .pic img{width:100%;height:100%;object-fit:cover;display:block}
+  .mcard .nm{font-weight:800;color:var(--green);padding:8px 6px 0;line-height:1.25;font-size:.95rem;flex:1}
+  .mcard .ds{font-size:.75rem;color:#7a6a52;padding:2px 6px 0}
+  .mcard .pr{font-family:'Suez One',serif;color:var(--red);font-size:1.3rem;padding:2px 0 8px}
+  .mcard .badge{position:absolute;top:8px;right:8px;background:var(--gold);color:var(--deep);font-size:.72rem;font-weight:800;border-radius:8px;padding:2px 7px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+  .mcard .size{position:absolute;top:8px;left:8px;background:var(--green);color:var(--gold2);font-family:'Suez One',serif;font-size:.9rem;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:2px solid var(--gold)}
   .deal{margin-top:20px;padding:16px;border-radius:16px;text-align:center;background:linear-gradient(135deg,var(--wine),#7a1f28);border:2px solid var(--gold);color:var(--cream)}
+  .deal-pic{width:150px;height:150px;display:block;margin:-6px auto 0;background:radial-gradient(circle,#fff7e2 0 60%,transparent 61%);border-radius:50%}
   .deal h3{font-family:'Suez One',serif;font-size:1.6rem;color:var(--gold2);line-height:1.1}
   .deal .sub{font-size:.85rem;color:var(--cream2)}
   .deal p{font-weight:700;margin-top:6px}
@@ -170,6 +182,51 @@
     <!-- שעון -->
     <symbol id="i-clock" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="24" cy="24" r="17"/><path d="M24 14v10l7 5"/></g></symbol>
     <!-- טלפון -->
+    <!-- ===== איורים לתפריט ===== -->
+    <radialGradient id="gPic" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#fff7e2"/><stop offset="1" stop-color="#ecd7a6"/></radialGradient>
+    <linearGradient id="gBun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9a84c"/><stop offset=".6" stop-color="#c47a26"/><stop offset="1" stop-color="#8f4c16"/></linearGradient>
+    <linearGradient id="gBeer" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7c43a"/><stop offset="1" stop-color="#c9780c"/></linearGradient>
+    <linearGradient id="gCan" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8e0f22"/><stop offset=".45" stop-color="#e0283f"/><stop offset="1" stop-color="#7a0c1c"/></linearGradient>
+    <linearGradient id="gKug" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0c35d"/><stop offset="1" stop-color="#c98a2c"/></linearGradient>
+    <linearGradient id="gPot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9a446"/><stop offset="1" stop-color="#a86d22"/></linearGradient>
+    <symbol id="p-plate" viewBox="0 0 120 120"><ellipse cx="60" cy="94" rx="50" ry="13" fill="#000" opacity=".12"/><ellipse cx="60" cy="90" rx="50" ry="13" fill="#fbf4e2" stroke="#d8ac4f" stroke-width="2"/><ellipse cx="60" cy="89" rx="36" ry="8" fill="none" stroke="#e8d6a8" stroke-width="1.5"/></symbol>
+    <symbol id="p-kugel1" viewBox="0 0 120 120"><use href="#p-plate"/>
+      <path d="M30 86V60l8-9h52v26l-8 9z" fill="#b8742a"/><rect x="30" y="60" width="52" height="26" fill="url(#gKug)"/><path d="M30 60l8-9h52l-8 9z" fill="#b5651d"/><path d="M82 60l8-9v26l-8 9z" fill="#d38f30"/>
+      <g fill="none" stroke="#fae2a0" stroke-width="2.2" stroke-linecap="round"><path d="M33 67q3-4 6 0t6 0 6 0 6 0 6 0 6 0 6 0 6 0"/><path d="M33 74q3-4 6 0t6 0 6 0 6 0 6 0 6 0 6 0 6 0"/><path d="M33 81q3-4 6 0t6 0 6 0 6 0 6 0 6 0 6 0 6 0"/></g>
+      <g fill="#7a3d10"><circle cx="48" cy="55" r="1.6"/><circle cx="62" cy="54" r="1.4"/><circle cx="74" cy="56" r="1.6"/><circle cx="56" cy="57" r="1.2"/></g></symbol>
+    <symbol id="p-kugel2" viewBox="0 0 120 120"><use href="#p-plate"/>
+      <path d="M30 86V60l8-9h52v26l-8 9z" fill="#9b5a1c"/><rect x="30" y="60" width="52" height="26" fill="#e2b45a"/><path d="M30 60l8-9h52l-8 9z" fill="#8a4512"/><path d="M82 60l8-9v26l-8 9z" fill="#c78a35"/>
+      <g stroke="#b9852f" stroke-width="1.6" stroke-linecap="round"><path d="M35 66l4 2M46 70l5 1M58 66l4 3M70 70l5 1M38 77l5 1M52 79l4 2M64 76l5 1M74 80l4 1"/></g>
+      <g fill="#4e2208"><circle cx="46" cy="55" r="2"/><circle cx="60" cy="53.5" r="1.6"/><circle cx="72" cy="56" r="2.2"/><circle cx="54" cy="57.5" r="1.3"/><circle cx="82" cy="54" r="1.5"/></g></symbol>
+    <symbol id="p-roll" viewBox="0 0 120 120"><use href="#p-plate"/>
+      <path d="M26 84q0-34 34-34t34 34z" fill="url(#gBun)"/><path d="M38 66q10-10 24-8" fill="none" stroke="#f6cf86" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+      <g fill="#f8ecc9"><ellipse cx="50" cy="62" rx="1.8" ry="1" transform="rotate(-20 50 62)"/><ellipse cx="64" cy="58" rx="1.8" ry="1"/><ellipse cx="74" cy="64" rx="1.8" ry="1" transform="rotate(25 74 64)"/><ellipse cx="58" cy="70" rx="1.8" ry="1"/><ellipse cx="44" cy="72" rx="1.8" ry="1"/><ellipse cx="80" cy="74" rx="1.8" ry="1"/></g></symbol>
+    <symbol id="p-challah" viewBox="0 0 120 120"><use href="#p-plate"/>
+      <g stroke="#8f4c16" stroke-width="1.2"><ellipse cx="30" cy="74" rx="14" ry="12" fill="url(#gBun)"/><ellipse cx="46" cy="66" rx="15" ry="13" fill="url(#gBun)"/><ellipse cx="46" cy="80" rx="15" ry="9" fill="url(#gBun)"/><ellipse cx="64" cy="68" rx="15" ry="13" fill="url(#gBun)"/><ellipse cx="64" cy="80" rx="15" ry="9" fill="url(#gBun)"/><ellipse cx="82" cy="70" rx="13" ry="13" fill="url(#gBun)"/></g>
+      <ellipse cx="94" cy="72" rx="7" ry="13" fill="#f6e3b4" stroke="#c98a2c" stroke-width="1.5"/>
+      <g fill="#fbf0cf"><circle cx="44" cy="60" r="1"/><circle cx="62" cy="62" r="1"/><circle cx="80" cy="64" r="1"/><circle cx="30" cy="68" r="1"/><circle cx="52" cy="66" r="1"/><circle cx="70" cy="66" r="1"/></g></symbol>
+    <symbol id="p-can" viewBox="0 0 120 120"><ellipse cx="60" cy="100" rx="24" ry="5" fill="#000" opacity=".15"/>
+      <rect x="40" y="26" width="40" height="72" rx="7" fill="url(#gCan)"/><ellipse cx="60" cy="28" rx="20" ry="6" fill="#d9d9d9" stroke="#9a9a9a"/><ellipse cx="60" cy="28" rx="15" ry="4" fill="#bdbdbd"/><path d="M56 27h8" stroke="#888" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M40 62q10-8 20 0t20 0v12q-10 8-20 0t-20 0z" fill="#fff" opacity=".9"/><rect x="45" y="34" width="5" height="58" rx="2.5" fill="#fff" opacity=".25"/>
+      <g fill="#ffd9de"><circle cx="66" cy="44" r="2"/><circle cx="70" cy="52" r="1.4"/><circle cx="62" cy="86" r="1.6"/></g></symbol>
+    <symbol id="p-bottle" viewBox="0 0 120 120"><ellipse cx="60" cy="102" rx="20" ry="5" fill="#000" opacity=".15"/>
+      <rect x="53" y="12" width="14" height="8" rx="2" fill="#c8102e"/><path d="M54 20h12v14q10 6 10 18v42q0 6-6 6H50q-6 0-6-6V52q0-12 10-18z" fill="#3f9a5f" opacity=".92"/>
+      <rect x="44" y="58" width="32" height="20" fill="#f3d58a"/><path d="M48 64h24M48 70h16" stroke="#0f3a2a" stroke-width="2.4" stroke-linecap="round"/>
+      <rect x="49" y="38" width="4" height="54" rx="2" fill="#fff" opacity=".35"/><g fill="#dff5e6" opacity=".9"><circle cx="66" cy="86" r="1.6"/><circle cx="62" cy="48" r="1.3"/><circle cx="68" cy="52" r="1"/></g></symbol>
+    <symbol id="p-beer1" viewBox="0 0 120 120"><ellipse cx="60" cy="101" rx="20" ry="5" fill="#000" opacity=".15"/>
+      <path d="M40 40h40l-5 58H45z" fill="url(#gBeer)"/><path d="M40 40h40l-5 58H45z" fill="none" stroke="#fff" stroke-width="2" opacity=".6"/>
+      <g fill="#fffaf0"><circle cx="44" cy="38" r="7"/><circle cx="54" cy="34" r="8"/><circle cx="66" cy="34" r="8"/><circle cx="76" cy="38" r="7"/><rect x="40" y="36" width="40" height="8"/></g>
+      <g fill="#ffe9a8"><circle cx="52" cy="70" r="1.5"/><circle cx="60" cy="82" r="1.2"/><circle cx="66" cy="62" r="1.4"/><circle cx="56" cy="56" r="1"/></g><rect x="46" y="48" width="4" height="44" rx="2" fill="#fff" opacity=".3"/></symbol>
+    <symbol id="p-beer2" viewBox="0 0 120 120"><ellipse cx="56" cy="102" rx="26" ry="5" fill="#000" opacity=".15"/>
+      <path d="M78 46h8q10 0 10 11v16q0 11-10 11h-8" fill="none" stroke="#efe6cf" stroke-width="7"/>
+      <rect x="32" y="32" width="46" height="66" rx="5" fill="url(#gBeer)"/><rect x="32" y="32" width="46" height="66" rx="5" fill="none" stroke="#fff" stroke-width="2" opacity=".6"/>
+      <g fill="#fffaf0"><circle cx="36" cy="30" r="7"/><circle cx="47" cy="25" r="9"/><circle cx="60" cy="25" r="9"/><circle cx="72" cy="29" r="8"/><rect x="32" y="28" width="46" height="8"/></g>
+      <path d="M44 44v46M56 44v46M68 44v46" stroke="#fff" stroke-width="2" opacity=".22"/><g fill="#ffe9a8"><circle cx="50" cy="74" r="1.5"/><circle cx="62" cy="60" r="1.3"/><circle cx="58" cy="86" r="1.2"/></g></symbol>
+    <symbol id="p-deal" viewBox="0 0 120 120"><use href="#p-plate"/>
+      <path d="M20 80q0-24 26-24t26 24z" fill="url(#gPot)"/><g fill="#7a2b16"><circle cx="34" cy="70" r="3"/><circle cx="44" cy="64" r="3"/><circle cx="54" cy="70" r="3"/><circle cx="40" cy="74" r="2.6"/><circle cx="50" cy="76" r="2.6"/></g><g fill="#f0d39a"><circle cx="30" cy="76" r="2.4"/><circle cx="58" cy="76" r="2.4"/></g>
+      <path d="M66 84q0-18 16-18t16 18z" fill="url(#gBun)"/>
+      <rect x="84" y="34" width="20" height="40" rx="5" fill="url(#gCan)"/><ellipse cx="94" cy="35" rx="10" ry="3.5" fill="#d9d9d9"/><path d="M84 54q5-4 10 0t10 0v6q-5 4-10 0t-10 0z" fill="#fff" opacity=".9"/>
+      <path d="M36 54c0-3 3-4 3-7M46 52c0-3 3-4 3-7" fill="none" stroke="#c9b89a" stroke-width="2" stroke-linecap="round"/></symbol>
     <!-- צלחת צ'ולנט -->
     <symbol id="i-plate" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="37" rx="21" ry="6"/><path d="M9 35c1-10 7-15 15-15s14 5 15 15"/><path d="M17 15c0-2 2-3 2-5M24 15c0-2 2-3 2-5M31 15c0-2 2-3 2-5"/></g><g fill="currentColor"><circle cx="18" cy="29" r="2"/><circle cx="24" cy="26" r="2"/><circle cx="30" cy="29" r="2"/><circle cx="21" cy="33" r="1.8"/><circle cx="27" cy="33" r="1.8"/><rect x="14" y="31" width="5" height="3" rx="1"/><rect x="29" y="31.5" width="5" height="3" rx="1"/></g></symbol>
     <!-- לחם -->
@@ -236,6 +293,7 @@
     <div class="h2orn"><i></i><b></b><i></i></div>
     <div id="menuList"></div>
     <div class="deal">
+      <svg class="deal-pic" viewBox="0 0 120 120" role="img" aria-label="דיליל שישי"><use href="#p-deal"/></svg>
       <h3>דיליל שישי</h3>
       <div class="sub">צ'ולנט חם, פינוק אישי</div>
       <p>צ'ולנט בשרי חצי ליטר + לחמנייה + שתייה בפחית</p>
@@ -362,18 +420,18 @@
   // dlv: true = אפשר להזמין גם במשלוח
   const MENU = [
     { cat: 'מהסיר לצלחת', items: [
-      { icon: 'i-plate', name: "צ'ולנט בשרי – חצי ליטר", desc: 'סיר חם של בית, המנה כוללת בשר', price: 50, chef: true, dlv: true },
-      { icon: 'i-plate', name: "צ'ולנט בשרי – רבע ליטר", desc: 'המנה כוללת בשר', price: 35, dlv: true },
-      { icon: 'i-kugel', name: 'קוגל אטריות', desc: '', price: 8, dlv: true },
-      { icon: 'i-kugel', name: 'קוגל תפוחי אדמה', desc: '', price: 8, dlv: true },
-      { icon: 'i-bread', name: 'לחמנייה', desc: '', price: 4, dlv: true },
-      { icon: 'i-bread', name: 'חצי חלה', desc: '', price: 12, dlv: true }
+      { icon: 'i-plate', pic: 'photo', size: '½', name: "צ'ולנט בשרי – חצי ליטר", desc: 'סיר חם של בית, המנה כוללת בשר', price: 50, chef: true, dlv: true },
+      { icon: 'i-plate', pic: 'photo', size: '¼', name: "צ'ולנט בשרי – רבע ליטר", desc: 'המנה כוללת בשר', price: 35, dlv: true },
+      { icon: 'i-kugel', pic: 'p-kugel1', name: 'קוגל אטריות', desc: '', price: 8, dlv: true },
+      { icon: 'i-kugel', pic: 'p-kugel2', name: 'קוגל תפוחי אדמה', desc: '', price: 8, dlv: true },
+      { icon: 'i-bread', pic: 'p-roll', name: 'לחמנייה', desc: '', price: 4, dlv: true },
+      { icon: 'i-bread', pic: 'p-challah', name: 'חצי חלה', desc: '', price: 12, dlv: true }
     ]},
     { cat: 'משהו לשתות', items: [
-      { icon: 'i-can',  name: 'שתייה בפחית', desc: '', price: 10, dlv: true },
-      { icon: 'i-can',  name: 'שתייה בבקבוק', desc: '', price: 12, dlv: true },
-      { icon: 'i-beer', name: 'בירה מהחבית – שליש ליטר', desc: 'קרה, ישר מהברז', price: 24 },
-      { icon: 'i-beer', name: 'בירה מהחבית – חצי ליטר', desc: 'קרה, ישר מהברז', price: 32 }
+      { icon: 'i-can', pic: 'p-can', name: 'שתייה בפחית', desc: '', price: 10, dlv: true },
+      { icon: 'i-can', pic: 'p-bottle', name: 'שתייה בבקבוק', desc: '', price: 12, dlv: true },
+      { icon: 'i-beer', pic: 'p-beer1', size: '⅓', name: 'בירה מהחבית – שליש ליטר', desc: 'קרה, ישר מהברז', price: 24 },
+      { icon: 'i-beer', pic: 'p-beer2', size: '½', name: 'בירה מהחבית – חצי ליטר', desc: 'קרה, ישר מהברז', price: 32 }
     ]}
   ];
   const DEAL = { name: "דיליל שישי (צ'ולנט חצי ליטר + לחמנייה + פחית)", desc: 'הכי משתלם', price: 60, short: 'דיליל שישי' };
@@ -391,11 +449,15 @@
   const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
   // תפריט
+  const picHtml = i => i.pic === 'photo'
+    ? `<img src="cholent-food.jpg" alt="${esc(i.name)}" loading="lazy" style="object-position:${i.size === '¼' ? '30%' : '50%'} 50%">`
+    : `<svg viewBox="${({ 'p-kugel1': '14 26 92 92', 'p-kugel2': '14 26 92 92', 'p-roll': '10 22 100 100' })[i.pic] || '0 0 120 120'}" role="img" aria-label="${esc(i.name)}"><use href="#${i.pic}"/></svg>`;
   document.getElementById('menuList').innerHTML = MENU.map(c =>
-    `<div class="cat">${esc(c.cat)}</div>` + c.items.map(i =>
-      `<div class="dish"><div class="ic"><svg style="color:var(--gold2)"><use href="#${i.icon}"/></svg></div>
-        <div class="tx"><h3>${esc(i.name)}${i.chef ? '<span class="star">⭐ הכי מבוקש</span>' : ''}</h3><p>${esc(i.desc)}</p></div>
-        ${i.price ? `<div class="price">${esc(i.price)} ₪</div>` : ''}</div>`).join('')).join('');
+    `<div class="cat">${esc(c.cat)}</div><div class="menu-grid">` + c.items.map(i =>
+      `<div class="mcard">${i.chef ? '<span class="badge">⭐ הכי מבוקש</span>' : ''}${i.size ? `<span class="size">${i.size}</span>` : ''}
+        <div class="pic">${picHtml(i)}</div>
+        <div class="nm">${esc(i.name.replace(/ – .*/, ''))}</div>${i.size ? `<div class="ds">${esc(i.name.split(' – ')[1] || '')}</div>` : ''}
+        <div class="pr">${esc(i.price)} ₪</div></div>`).join('') + '</div>').join('');
 
   // ימי חמישי הקרובים
   const dateSel = document.getElementById('date'), timeSel = document.getElementById('time'), guestSel = document.getElementById('guests');
