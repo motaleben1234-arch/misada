@@ -88,6 +88,7 @@
         <button type="button" data-f="all" class="on">הכול</button>
         <button type="button" data-f="restaurant">🍝 מסעדה</button>
         <button type="button" data-f="barber">✂️ מספרה</button>
+        <button type="button" data-f="delivery">🛵 משלוח</button>
       </div>
     </div>
 
@@ -152,19 +153,19 @@
     const active = rows.filter(r => r.status !== 'בוטל');
     document.getElementById('sumCount').textContent = active.length;
     const onlyBarber = filter === 'barber';
-    document.getElementById('sumLabel').textContent = onlyBarber ? 'לקוחות' : 'סועדים';
+    document.getElementById('sumLabel').textContent = onlyBarber ? 'לקוחות' : filter === 'delivery' ? 'מנות' : 'סועדים';
     document.getElementById('sumGuests').textContent = active.reduce((s, r) => s + (parseInt(r.guests, 10) || 1), 0);
 
     const nowHM = new Date().toTimeString().slice(0,5);
     document.getElementById('list').innerHTML = rows.length ? rows.map(r => {
-      const isBarber = r.biz === 'barber';
+      const isBarber = r.biz === 'barber', isDlv = r.biz === 'delivery';
       const past = date < t || (date === t && r.time < nowHM);
       const cls = r.status === 'בוטל' ? 'cancel' : past ? 'past' : '';
       return `<div class="bk ${cls}">
         <div class="tm">${esc(r.time)}</div>
         <div>
-          <div class="nm">${esc(r.name)}<span class="tag">${isBarber ? '✂️ מספרה' : '🍝 מסעדה'}</span>${r.status && r.status !== 'חדש' ? `<span class="tag">${esc(r.status)}</span>` : ''}</div>
-          <div class="meta">${isBarber ? '💈 ' + esc(r.barber || 'ללא העדפה') : '👥 ' + esc(r.guests) + ' סועדים'} · 📱 <a href="tel:${esc(String(r.phone).replace(/[^\d+]/g,''))}">${esc(r.phone)}</a></div>
+          <div class="nm">${esc(r.name)}<span class="tag">${isBarber ? '✂️ מספרה' : isDlv ? '🛵 משלוח' : '🍝 מסעדה'}</span>${r.status && r.status !== 'חדש' ? `<span class="tag">${esc(r.status)}</span>` : ''}</div>
+          <div class="meta">${isBarber ? '💈 ' + esc(r.barber || 'ללא העדפה') : isDlv ? '🍲 ' + esc(r.guests) + ' מנות' : '👥 ' + esc(r.guests) + ' סועדים'} · 📱 <a href="tel:${esc(String(r.phone).replace(/[^\d+]/g,''))}">${esc(r.phone)}</a></div>
           ${r.notes ? `<div class="note">📝 ${esc(r.notes)}</div>` : ''}
         </div>
       </div>`;

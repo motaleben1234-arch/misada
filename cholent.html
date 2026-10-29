@@ -15,6 +15,23 @@
     linear-gradient(180deg,var(--green) 0%,var(--deep) 100%) fixed}
   .bsd{position:absolute;top:10px;right:14px;font-size:.85rem;color:var(--gold2);font-weight:500;z-index:2}
 
+  .kosher{position:absolute;top:10px;left:12px;z-index:2;width:92px;height:92px;border-radius:50%;
+    background:radial-gradient(circle,#fbf3de 0 58%,var(--cream2) 59%);border:2px solid var(--gold);box-shadow:0 0 0 3px var(--green),0 0 0 4px var(--gold),0 6px 16px rgba(0,0,0,.45);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--green);line-height:1.05;transform:rotate(-8deg)}
+  .kosher .k1{font-family:'Suez One',serif;font-size:1.35rem;color:var(--red)}
+  .kosher .k2{font-size:.6rem;font-weight:700;margin-top:2px}
+  .kosher .k3{font-family:'Suez One',serif;font-size:.78rem}
+  @media(max-width:420px){.kosher{width:78px;height:78px;top:8px;left:8px}.kosher .k1{font-size:1.1rem}.kosher .k2{font-size:.52rem}.kosher .k3{font-size:.68rem}}
+
+  /* ===== משלוח ===== */
+  .dlv-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px dashed #d4c194}
+  .dlv-item .tx{flex:1;font-weight:800;color:var(--green)}
+  .dlv-item .tx small{display:block;font-weight:400;color:#6b5a43;font-size:.82rem}
+  .qty{display:flex;align-items:center;gap:8px}
+  .qty button{width:34px;height:34px;border-radius:50%;border:2px solid var(--gold);background:var(--green);color:var(--gold2);font-size:1.2rem;font-weight:800;cursor:pointer;line-height:1}
+  .qty span{min-width:22px;text-align:center;font-weight:800;font-size:1.1rem}
+  .area{font-size:.85rem;color:#6b5a43;text-align:center;margin-top:-6px;margin-bottom:6px}
+
   /* ===== כותרת ===== */
   header{position:relative;text-align:center;padding:34px 16px 26px}
   .label{position:relative;display:inline-block;margin:26px auto 0;padding:34px 40px 22px;min-width:270px;
@@ -121,6 +138,7 @@
 
 <header>
   <div class="bsd">בס״ד</div>
+  <div class="kosher" title="הבשר בכשרות הרב מחפוד"><span class="k1">כשר</span><span class="k2">הבשר בכשרות</span><span class="k3">הרב מחפוד</span></div>
   <div class="label">
     <svg class="pot" viewBox="0 0 78 62">
       <path d="M33 10c-3-4 2-6 0-10 5 3 6 7 3 10" fill="#e2492f"/><path d="M41 12c-2-3 1-5 0-8 4 2 4 6 2 8" fill="#f39a2b"/>
@@ -153,8 +171,9 @@
   </div>
 
   <div class="tabs">
-    <button type="button" class="active" id="tabBook" onclick="tab('book')">🍲 הזמנת שולחן</button>
-    <button type="button" id="tabMenu" onclick="tab('menu')">📜 התפריט</button>
+    <button type="button" class="active" id="tabBook" onclick="tab('book')">🍲 שולחן</button>
+    <button type="button" id="tabDlv" onclick="tab('dlv')">🛵 משלוח</button>
+    <button type="button" id="tabMenu" onclick="tab('menu')">📜 תפריט</button>
   </div>
 
   <!-- תפריט -->
@@ -164,6 +183,7 @@
     <div id="menuList"></div>
     <div class="note">🥩 הבשר בכשרות הרב מחפוד</div>
     <button type="button" class="btn" onclick="tab('book')">להזמנת שולחן</button>
+    <button type="button" class="btn" onclick="tab('dlv')">🛵 להזמנת משלוח</button>
   </div>
 
   <!-- טופס -->
@@ -198,11 +218,50 @@
     </form>
   </div>
 
+  <!-- משלוח -->
+  <div class="card hidden" id="dlvCard">
+    <h2>משלוח הביתה</h2>
+    <div class="h2orn"><i></i><b></b><i></i></div>
+    <p class="area">🛵 משלוחים בבני ברק והסביבה · בימי חמישי</p>
+    <form id="dlvForm">
+      <label>מה להביא לכם?</label>
+      <div id="dlvItems"></div>
+
+      <label for="dName">שם מלא</label>
+      <input id="dName" required placeholder="לדוגמה: יענקי כהן">
+
+      <label for="dPhone">טלפון נייד</label>
+      <input id="dPhone" type="tel" required placeholder="050-0000000" pattern="0[0-9\-]{8,11}">
+
+      <label for="dCity">עיר</label>
+      <select id="dCity" required></select>
+
+      <label for="dAddr">רחוב, מספר בית, קומה ודירה</label>
+      <input id="dAddr" required placeholder="לדוגמה: רבי עקיבא 50, קומה 2, דירה 7">
+
+      <div class="row">
+        <div>
+          <label for="dDate">איזה חמישי?</label>
+          <select id="dDate" required></select>
+        </div>
+        <div>
+          <label for="dTime">מתי להגיע?</label>
+          <select id="dTime" required></select>
+        </div>
+      </div>
+
+      <label for="dNotes">הערות לשליח (לא חובה)</label>
+      <textarea id="dNotes" rows="2" placeholder="קוד לבניין, להתקשר כשמגיעים..."></textarea>
+
+      <button type="submit" class="btn">הזמנת משלוח</button>
+    </form>
+  </div>
+
   <!-- אישור -->
   <div class="card done hidden" id="doneCard">
     <div class="check">✓</div>
-    <h2>ההזמנה התקבלה!</h2>
-    <p>הסיר כבר על האש 🍲 נתראה בחמישי!</p>
+    <h2 id="doneTitle">ההזמנה התקבלה!</h2>
+    <p id="doneText">הסיר כבר על האש 🍲 נתראה בחמישי!</p>
     <div class="summary" id="summary"></div>
     <a id="waBtn" class="wa-btn" target="_blank" rel="noopener">💬 שמור את האישור בוואטסאפ</a>
     <button type="button" class="btn" onclick="newBooking()">הזמנה נוספת</button>
@@ -210,6 +269,7 @@
 
   <div class="info">
     <div><svg style="color:var(--gold2)"><use href="#i-clock"/></svg><span><b>שעות פתיחה</b>כל חמישי · מ־18:00 ועד אחרון הלקוחות</span></div>
+    <div><span style="font-size:1.8rem;width:34px;text-align:center">🛵</span><span><b>משלוחים</b>בני ברק והסביבה · בימי חמישי</span></div>
     <a href="https://www.google.com/maps/search/?api=1&query=%D7%91%D7%A8+%D7%9B%D7%95%D7%9B%D7%91%D7%90+21+%D7%91%D7%A0%D7%99+%D7%91%D7%A8%D7%A7" target="_blank" rel="noopener"><svg style="color:var(--gold2)"><use href="#i-pin"/></svg><span><b>כתובת</b>בר כוכבא 21, בני ברק · לחצו לניווט</span></a>
     <a href="https://wa.me/972553125739" target="_blank" rel="noopener"><svg style="color:var(--gold2)"><use href="#i-phone"/></svg><span><b>טלפון / וואטסאפ</b><span class="num">055-3125739</span></span></a>
     <div><svg style="color:var(--gold2)"><use href="#i-cow"/></svg><span><b>כשרות</b>הבשר בכשרות הרב מחפוד</span></div>
@@ -236,6 +296,15 @@
   ];
   const SLOT_FROM = 18, SLOT_TO = 24;   // שעות הזמנה: 18:00 עד 23:30
   const BIZ_NAME = "צ'ולנט ארוהיגיקייט";
+
+  // ===== משלוחים – כאן משנים ערים, שעות ומה אפשר להזמין =====
+  const DLV_CITIES = ['בני ברק', 'רמת גן', 'גבעתיים', 'פתח תקווה', 'קריית אונו', 'גבעת שמואל'];
+  const DLV_WINDOWS = ['18:00', '19:00', '20:00', '21:00', '22:00'];   // כל חלון – שעה אחת
+  const DLV_ITEMS = [
+    { name: "צ'ולנט", desc: 'מנה' },
+    { name: 'קוגל', desc: 'מנה' },
+    { name: 'קישקע', desc: 'מנה' }
+  ];
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwaLQ8yLOg7c4Uej48bDJVRuxUm8Lzquah6JRpjYImPIse3wdbhkVfiRIO7atgq3Hn0/exec';
   const post = b => fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) }).then(r => r.json());
@@ -291,13 +360,82 @@
   dateSel.addEventListener('change', loadSlots);
   loadSlots();
 
+  // ===== משלוח =====
+  const qty = DLV_ITEMS.map(() => 0);
+  const dDate = document.getElementById('dDate'), dTime = document.getElementById('dTime'), dCity = document.getElementById('dCity');
+  function drawItems(){
+    document.getElementById('dlvItems').innerHTML = DLV_ITEMS.map((it, k) =>
+      `<div class="dlv-item"><div class="tx">${esc(it.name)}<small>${esc(it.desc)}</small></div>
+        <div class="qty"><button type="button" onclick="chg(${k},-1)" aria-label="פחות">−</button><span>${qty[k]}</span><button type="button" onclick="chg(${k},1)" aria-label="יותר">+</button></div></div>`).join('');
+  }
+  function chg(k, n){ qty[k] = Math.max(0, Math.min(30, qty[k] + n)); drawItems(); }
+  drawItems();
+  DLV_CITIES.forEach(c => dCity.add(new Option(c, c)));
+  [...dateSel.options].forEach(o => dDate.add(new Option(o.text, o.value)));
+  function fillWindows(){
+    const isToday = dDate.value === today, hm = nowHM();
+    dTime.innerHTML = '';
+    DLV_WINDOWS.forEach(w => {
+      const end = String(+w.slice(0,2) + 1).padStart(2,'0') + ':00';
+      const o = new Option(`${w} עד ${end}`, w);
+      if (isToday && w <= hm) { o.disabled = true; o.textContent += ' – עבר'; }
+      dTime.add(o);
+    });
+    const f = [...dTime.options].find(o => !o.disabled); if (f) dTime.value = f.value;
+  }
+  dDate.addEventListener('change', fillWindows);
+  fillWindows();
+
+  document.getElementById('dlvForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const list = DLV_ITEMS.map((it, k) => qty[k] ? `${qty[k]} ${it.name}` : '').filter(Boolean);
+    if (!list.length) { alert('בחרו לפחות מנה אחת 🍲'); return; }
+    const opt = dTime.options[dTime.selectedIndex];
+    if (!opt || opt.disabled) { alert('אין חלון משלוח פנוי בחמישי הזה. בחרו חמישי אחר.'); return; }
+    const btn = e.target.querySelector('button[type=submit]');
+    const addr = document.getElementById('dAddr').value.trim() + ', ' + dCity.value;
+    const extra = document.getElementById('dNotes').value.trim();
+    const b = {
+      biz: 'delivery',
+      name: document.getElementById('dName').value.trim(),
+      phone: document.getElementById('dPhone').value.trim(),
+      date: dDate.value, time: dTime.value,
+      guests: qty.reduce((a, c) => a + c, 0),
+      notes: `[${BIZ_NAME}] 🛵 משלוח | ${list.join(', ')} | כתובת: ${addr}` + (extra ? ' | ' + extra : '')
+    };
+    btn.disabled = true; btn.textContent = 'שולח...';
+    try {
+      const r = await post(b);
+      if (!r.ok) throw new Error(r.error || 'error');
+    } catch (err) {
+      alert('לא הצלחנו לשלוח את ההזמנה. נסו שוב או שלחו לנו וואטסאפ.');
+      btn.disabled = false; btn.textContent = 'הזמנת משלוח';
+      return;
+    }
+    btn.disabled = false; btn.textContent = 'הזמנת משלוח';
+    const d = new Date(b.date + 'T12:00:00').toLocaleDateString('he-IL');
+    const win = opt.textContent;
+    document.getElementById('doneTitle').textContent = 'המשלוח הוזמן!';
+    document.getElementById('doneText').textContent = 'הסיר כבר על האש 🍲 השליח בדרך אליכם בחמישי';
+    document.getElementById('summary').innerHTML =
+      `<b>${esc(b.name)}</b><br>🍲 ${esc(list.join(', '))}<br>📍 ${esc(addr)}<br>📅 חמישי ${d} · ${esc(win)}<br>📱 ${esc(b.phone)}` + (extra ? `<br>📝 ${esc(extra)}` : '');
+    const msg = `✅ אישור משלוח – ${BIZ_NAME}\n${b.name}\n🍲 ${list.join(', ')}\n📍 ${addr}\n📅 חמישי ${d} · ${win}\nבתיאבון! 🛵`;
+    document.getElementById('waBtn').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+    lastMode = 'dlv';
+    ['formCard','dlvCard','menuCard'].forEach(c => document.getElementById(c).classList.add('hidden'));
+    document.getElementById('doneCard').classList.remove('hidden');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+  let lastMode = 'book';
+
   function show(id){ ['formCard','doneCard'].forEach(c => document.getElementById(c).classList.toggle('hidden', c !== id)); window.scrollTo({top:0,behavior:'smooth'}); }
   function tab(t){
-    const book = t === 'book';
-    document.getElementById('tabBook').classList.toggle('active', book);
-    document.getElementById('tabMenu').classList.toggle('active', !book);
-    document.getElementById('menuCard').classList.toggle('hidden', book);
-    document.getElementById('formCard').classList.toggle('hidden', !book);
+    document.getElementById('tabBook').classList.toggle('active', t === 'book');
+    document.getElementById('tabDlv').classList.toggle('active', t === 'dlv');
+    document.getElementById('tabMenu').classList.toggle('active', t === 'menu');
+    document.getElementById('formCard').classList.toggle('hidden', t !== 'book');
+    document.getElementById('dlvCard').classList.toggle('hidden', t !== 'dlv');
+    document.getElementById('menuCard').classList.toggle('hidden', t !== 'menu');
     document.getElementById('doneCard').classList.add('hidden');
   }
 
@@ -325,6 +463,9 @@
       return;
     }
     btn.disabled = false; btn.textContent = 'אישור הזמנה';
+    lastMode = 'book';
+    document.getElementById('doneTitle').textContent = 'ההזמנה התקבלה!';
+    document.getElementById('doneText').textContent = 'הסיר כבר על האש 🍲 נתראה בחמישי!';
     const d = new Date(b.date + 'T12:00:00').toLocaleDateString('he-IL');
     document.getElementById('summary').innerHTML =
       `<b>${esc(b.name)}</b><br>📅 חמישי ${d} בשעה ${b.time}<br>👥 ${b.guests} אנשים<br>📱 ${esc(b.phone)}` + (extra ? `<br>📝 ${esc(extra)}` : '');
@@ -334,7 +475,10 @@
     loadSlots();
   });
 
-  function newBooking(){ document.getElementById('bookingForm').reset(); guestSel.value = 4; loadSlots(); show('formCard'); }
+  function newBooking(){
+    if (lastMode === 'dlv') { document.getElementById('dlvForm').reset(); qty.fill(0); drawItems(); fillWindows(); tab('dlv'); window.scrollTo({top:0,behavior:'smooth'}); return; }
+    document.getElementById('bookingForm').reset(); guestSel.value = 4; loadSlots(); show('formCard');
+  }
 </script>
 </body>
 </html>
