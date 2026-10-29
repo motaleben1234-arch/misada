@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הספר של העיר – קביעת תור</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Frank+Ruhl+Libre:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0e0c0a;--card:#17140f;--ink:#f3ead8;--muted:#a89a80;--gold:#c9a45c;--line:#3a3225}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Heebo',sans-serif;background:radial-gradient(ellipse at top,#1d1812 0%,#0e0c0a 60%) fixed;color:var(--ink);line-height:1.6;font-weight:300}
+  header{position:relative;text-align:center;padding:56px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#120f0b,#0e0c0a)}
+  header::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:160px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+  .bsd{position:absolute;top:10px;right:14px;font-size:.85rem;color:var(--gold);font-weight:500}
+  .logo{width:96px;height:96px;display:block;margin:0 auto 10px;filter:drop-shadow(0 0 18px rgba(201,164,92,.35))}
+  h1{font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:2.6rem;letter-spacing:3px;background:linear-gradient(180deg,#f3dfa8,#c9a45c 60%,#9c7a37);-webkit-background-clip:text;background-clip:text;color:transparent}
+  header p{color:var(--muted);letter-spacing:1px;font-size:.95rem}
+  .hero-btn{display:inline-block;margin-top:18px;padding:12px 28px;background:transparent;color:var(--gold);border:1px solid var(--gold);border-radius:999px;font:inherit;font-weight:700;font-size:1.05rem;letter-spacing:1px;cursor:pointer}
+  .hero-btn:hover{background:var(--gold);color:#0e0c0a}
+  main{max-width:560px;margin:28px auto 40px;padding:0 16px}
+  .tabs{display:flex;gap:8px;background:#141109;border:1px solid var(--line);border-radius:14px;padding:6px;margin-bottom:16px}
+  .tabs button{flex:1;margin:0;padding:10px;border:0;border-radius:10px;background:none;color:var(--muted);font:inherit;font-weight:500;cursor:pointer}
+  .tabs button.active{background:linear-gradient(180deg,#d9b56c,#a8843f);color:#120f0b;font-weight:700}
+  .card{position:relative;background:linear-gradient(180deg,#1b1711,#141109);border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.5);padding:28px 22px}
+  .card::before{content:"";position:absolute;inset:6px;border:1px solid rgba(201,164,92,.12);border-radius:12px;pointer-events:none}
+  h2{font-family:'Frank Ruhl Libre',serif;color:var(--gold);text-align:center;font-size:1.5rem;letter-spacing:1px;margin-bottom:18px}
+  h2::after{content:"✦";display:block;font-size:.7rem;color:var(--muted);margin-top:4px}
+  label{display:block;color:var(--muted);margin:14px 0 6px;font-size:.95rem;letter-spacing:.5px}
+  input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#0f0d09;color:var(--ink)}
+  input::placeholder,textarea::placeholder{color:#6b6150}
+  input[type=date]{color-scheme:dark}
+  input:focus,select:focus,textarea:focus{outline:1px solid var(--gold)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .services{display:grid;gap:8px}
+  .svc{margin:0;color:var(--ink);display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:#0f0d09}
+  .svc input{display:none}
+  .svc small{display:block;color:var(--muted);font-size:.8rem}
+  .svc b{color:var(--gold);font-family:'Frank Ruhl Libre',serif}
+  .svc:has(input:checked){border-color:var(--gold);background:rgba(201,164,92,.1)}
+  .btn{width:100%;margin-top:22px;padding:14px;border:0;border-radius:12px;background:linear-gradient(180deg,#d9b56c,#a8843f);color:#120f0b;font:inherit;font-weight:700;font-size:1.05rem;letter-spacing:1px;cursor:pointer}
+  .btn:disabled{opacity:.6;cursor:wait}
+  .hidden{display:none}
+  .done{text-align:center}
+  .check{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);color:var(--gold);font-size:2rem;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+  .summary{background:#0f0d09;border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:16px;text-align:right}
+  .wa-btn{display:block;margin-top:18px;padding:13px;border-radius:12px;border:1px solid #25d366;color:#25d366;text-decoration:none;font-weight:700}
+  .wa-btn:hover{background:#25d366;color:#0e0c0a}
+  .price-row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px dotted var(--line)}
+  .price-row:last-of-type{border-bottom:0}
+  .price-row h3{font-family:'Frank Ruhl Libre',serif;font-weight:500;font-size:1.08rem}
+  .price-row p{color:var(--muted);font-size:.88rem}
+  .price-row .p{color:var(--gold);font-family:'Frank Ruhl Libre',serif;white-space:nowrap}
+  .info{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+  .info div{background:#17140f;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;font-size:.9rem;color:var(--muted)}
+  .info b{display:block;color:var(--gold);font-family:'Frank Ruhl Libre',serif;font-size:1.05rem}
+  footer{text-align:center;color:#6b6150;font-size:.85rem;padding:20px;letter-spacing:1px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bsd">בס״ד</div>
+  <svg class="logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="לוגו המספרה">
+    <circle cx="60" cy="60" r="56" fill="#17140f" stroke="#c9a45c" stroke-width="2"/>
+    <circle cx="60" cy="60" r="46" fill="none" stroke="#c9a45c" stroke-width="1" stroke-dasharray="2 4"/>
+    <!-- מספריים -->
+    <g fill="none" stroke="#d9b56c" stroke-width="3" stroke-linecap="round">
+      <circle cx="44" cy="78" r="9"/>
+      <circle cx="76" cy="78" r="9"/>
+      <path d="M50 71 L74 34"/>
+      <path d="M70 71 L46 34"/>
+    </g>
+    <circle cx="60" cy="56" r="2.5" fill="#d9b56c"/>
+  </svg>
+  <h1>הספר של העיר</h1>
+  <p>תספורות גברים · עיצוב זקן · גילוח מסורתי</p>
+  <button type="button" class="hero-btn" onclick="tab('prices')">✂️ למחירון</button>
+</header>
+
+<main>
+  <div class="tabs">
+    <button type="button" class="active" id="tabBook" onclick="tab('book')">📅 קביעת תור</button>
+    <button type="button" id="tabPrices" onclick="tab('prices')">💈 מחירון</button>
+  </div>
+
+  <!-- מחירון -->
+  <div class="card hidden" id="pricesCard">
+    <h2>מחירון</h2>
+    <div id="priceList"></div>
+    <button type="button" class="btn" onclick="tab('book')">לקביעת תור</button>
+  </div>
+
+  <!-- טופס -->
+  <div class="card" id="formCard">
+    <h2>קביעת תור</h2>
+    <form id="bookingForm">
+      <label>בחר שירות</label>
+      <div class="services" id="svcList"></div>
+
+      <label for="barber">ספר</label>
+      <select id="barber"></select>
+
+      <div class="row">
+        <div>
+          <label for="date">תאריך</label>
+          <input id="date" type="date" required>
+        </div>
+        <div>
+          <label for="time">שעה</label>
+          <select id="time" required></select>
+        </div>
+      </div>
+
+      <label for="name">שם מלא</label>
+      <input id="name" required placeholder="לדוגמה: יוסי לוי">
+
+      <label for="phone">טלפון נייד</label>
+      <input id="phone" type="tel" required placeholder="050-0000000" pattern="0[0-9\-]{8,11}">
+
+      <label for="notes">הערות (לא חובה)</label>
+      <textarea id="notes" rows="2" placeholder="לדוגמה: תספורת קצרה בצדדים"></textarea>
+
+      <button type="submit" class="btn">אישור התור</button>
+    </form>
+  </div>
+
+  <!-- אישור -->
+  <div class="card done hidden" id="doneCard">
+    <div class="check">✓</div>
+    <h2>התור נקבע!</h2>
+    <p>מחכים לך. נתראה בקרוב ✂️</p>
+    <div class="summary" id="summary"></div>
+    <a id="waBtn" class="wa-btn" target="_blank" rel="noopener">💬 שמור את האישור בוואטסאפ</a>
+    <button type="button" class="btn" onclick="newBooking()">תור נוסף</button>
+  </div>
+
+  <div class="info">
+    <div><b>שעות פתיחה</b>א׳–ה׳ 09:00–20:00<br>ו׳ 08:00–14:00</div>
+    <div><b>כתובת</b>רחוב הדוגמה 5<br>תל אביב</div>
+  </div>
+</main>
+
+<footer>© הספר של העיר</footer>
+
+<script>
+  // ===== כאן משנים שירותים, מחירים וספרים =====
+  const SERVICES = [
+    { name: 'תספורת גבר', desc: 'כולל חפיפה וסידור', min: 30, price: 70 },
+    { name: 'תספורת + זקן', desc: 'תספורת מלאה ועיצוב זקן', min: 45, price: 100 },
+    { name: 'עיצוב זקן', desc: 'קו מדויק ומגבת חמה', min: 20, price: 45 },
+    { name: 'גילוח מסורתי', desc: 'סכין, קצף חם ומגבת', min: 30, price: 60 },
+    { name: 'תספורת ילד', desc: 'עד גיל 12', min: 20, price: 50 }
+  ];
+  const BARBERS = ['ללא העדפה', 'אבי', 'משה', 'דניאל'];
+
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwaLQ8yLOg7c4Uej48bDJVRuxUm8Lzquah6JRpjYImPIse3wdbhkVfiRIO7atgq3Hn0/exec';
+  const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  document.getElementById('svcList').innerHTML = SERVICES.map((s, i) =>
+    `<label class="svc"><input type="radio" name="svc" value="${i}" ${i===0?'checked':''}><span>${esc(s.name)}<small>${s.min} דקות</small></span><b>₪${s.price}</b></label>`).join('');
+  document.getElementById('priceList').innerHTML = SERVICES.map(s =>
+    `<div class="price-row"><div><h3>${esc(s.name)}</h3><p>${esc(s.desc)} · ${s.min} דקות</p></div><div class="p">₪${s.price}</div></div>`).join('');
+  const barberSel = document.getElementById('barber');
+  BARBERS.forEach(b => barberSel.add(new Option(b, b)));
+
+  const timeSel = document.getElementById('time');
+  const dateInput = document.getElementById('date');
+  function fillTimes(){
+    const day = new Date(dateInput.value).getDay(); // 5 = שישי, 6 = שבת
+    timeSel.innerHTML = '';
+    if (day === 6) { timeSel.add(new Option('סגור בשבת', '')); return; }
+    const [from, to] = day === 5 ? [8, 14] : [9, 20];
+    for (let h = from; h < to; h++) ['00','30'].forEach(m => { const t = `${String(h).padStart(2,'0')}:${m}`; timeSel.add(new Option(t, t)); });
+  }
+  const now = new Date(); const today = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().split('T')[0];
+  dateInput.min = today; dateInput.value = today; fillTimes();
+  dateInput.addEventListener('change', fillTimes);
+
+  function show(id){
+    ['formCard','doneCard'].forEach(c => document.getElementById(c).classList.toggle('hidden', c !== id));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function tab(t){
+    const book = t === 'book';
+    document.getElementById('tabBook').classList.toggle('active', book);
+    document.getElementById('tabPrices').classList.toggle('active', !book);
+    document.getElementById('pricesCard').classList.toggle('hidden', book);
+    document.getElementById('formCard').classList.toggle('hidden', !book);
+    document.getElementById('doneCard').classList.add('hidden');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  document.getElementById('bookingForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!timeSel.value) { alert('המספרה סגורה ביום הזה. בחרו יום אחר.'); return; }
+    const btn = e.target.querySelector('button[type=submit]');
+    const svc = SERVICES[document.querySelector('input[name=svc]:checked').value];
+    const barber = barberSel.value;
+    const extra = document.getElementById('notes').value.trim();
+    const b = {
+      name: document.getElementById('name').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      date: dateInput.value, time: timeSel.value, guests: 1,
+      notes: `שירות: ${svc.name} | ספר: ${barber}` + (extra ? ` | ${extra}` : '')
+    };
+    btn.disabled = true; btn.textContent = 'שולח...';
+    try {
+      const res = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) });
+      const r = await res.json();
+      if (!r.ok) throw new Error(r.error || 'error');
+    } catch (err) {
+      alert('לא הצלחנו לקבוע את התור. נסו שוב בעוד רגע, או התקשרו למספרה.');
+      btn.disabled = false; btn.textContent = 'אישור התור';
+      return;
+    }
+    btn.disabled = false; btn.textContent = 'אישור התור';
+    const d = new Date(b.date).toLocaleDateString('he-IL');
+    document.getElementById('summary').innerHTML =
+      `<b>${esc(b.name)}</b><br>✂️ ${esc(svc.name)} · ₪${svc.price}<br>💈 ספר: ${esc(barber)}<br>📅 ${d} בשעה ${b.time}<br>📱 ${esc(b.phone)}` +
+      (extra ? `<br>📝 ${esc(extra)}` : '');
+    const msg = `✅ אישור תור – הספר של העיר\n${b.name}\n✂️ ${svc.name}\n💈 ספר: ${barber}\n📅 ${d} בשעה ${b.time}\nנתראה!`;
+    document.getElementById('waBtn').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+    show('doneCard');
+  });
+
+  function newBooking(){ document.getElementById('bookingForm').reset(); dateInput.value = today; fillTimes(); show('formCard'); }
+</script>
+</body>
+</html>
