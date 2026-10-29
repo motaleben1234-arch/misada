@@ -141,6 +141,11 @@
   .mcard.nopic:not(:has(.emo)):before{content:"◆";color:var(--gold);font-size:.7rem;display:block}
   .mcard .emo{font-size:2rem;line-height:1}
   .mcard .ds{font-size:.75rem;color:#7a6a52;padding:2px 6px 0}
+  .dcard .pr{padding-bottom:4px!important}
+  .dcard .dq{justify-content:center;padding:0 0 10px}
+  .dcard .dq button{width:36px;height:36px}
+  .dcard.sel{border-color:var(--red);box-shadow:0 0 0 3px rgba(168,38,44,.25),0 6px 16px rgba(15,58,42,.18)}
+  .dcard.sel .dq span{color:var(--red)}
   .mcard .pr{font-family:'Suez One',serif;color:var(--red);font-size:1.3rem;padding:2px 0 8px}
   .mcard .badge{position:absolute;top:8px;right:8px;background:var(--gold);color:var(--deep);font-size:.72rem;font-weight:800;border-radius:8px;padding:2px 7px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
   .mcard .size{position:absolute;top:8px;left:8px;background:var(--green);color:var(--gold2);font-family:'Suez One',serif;font-size:.9rem;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:2px solid var(--gold)}
@@ -464,7 +469,7 @@
       { icon: 'i-can', pic: '', emo: '🫧', name: 'סודה', desc: 'בקבוק', price: 10, dlv: true }
     ]}
   ];
-  const DEAL = { name: "דיליל שישי (צ'ולנט חצי ליטר + לחמנייה + פחית)", desc: 'הכי משתלם', price: 60, short: 'דיליל שישי' };
+  const DEAL = { pic: 'photo', name: "דיליל שישי (צ'ולנט חצי ליטר + לחמנייה + פחית)", desc: 'הכי משתלם', price: 60, short: 'דיליל שישי' };
   const SLOT_FROM = 18, SLOT_TO = 24;   // שעות הזמנה: 18:00 עד 23:30
   const BIZ_NAME = "צ'ולנט ארוהיגיקייט";
   const BIZ_WA = '972553125739';   // וואטסאפ של העסק – לשם הלקוח שולח את ההזמנה
@@ -538,16 +543,27 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
   // ===== משלוח =====
   const qty = DLV_ITEMS.map(() => 0);
   const dDate = document.getElementById('dDate'), dTime = document.getElementById('dTime'), dCity = document.getElementById('dCity');
+  function cardHtml(it, k){
+    const nm = it.short || it.name.replace(/ – .*/, '');
+    const sub = it.size ? (it.name.split(' – ')[1] || '') : (it.short ? it.name.replace(/^[^(]*\(|\)$/g, '') : (!it.pic ? it.desc : ''));
+    return `<div class="mcard dcard${it.pic ? '' : ' nopic'}${qty[k] ? ' sel' : ''}" id="dc${k}">${it.size ? `<span class="size">${it.size}</span>` : ''}${k === 0 ? '<span class="badge">🎁 מבצע</span>' : ''}
+        ${it.pic ? `<div class="pic">${picHtml(it)}</div>` : (it.emo ? `<div class="emo">${it.emo}</div>` : '')}
+        <div class="nm">${esc(nm)}</div>${sub ? `<div class="ds">${esc(sub)}</div>` : ''}
+        <div class="pr">${esc(it.price)} ₪</div>
+        <div class="qty dq"><button type="button" onclick="chg(${k},-1)" aria-label="פחות">−</button><span id="dq${k}">${qty[k]}</span><button type="button" onclick="chg(${k},1)" aria-label="יותר">+</button></div></div>`;
+  }
   function drawItems(){
     const grp = (it, k) => k === 0 ? '🎁 מבצע' : (/i-can|i-beer/.test(it.icon) ? '🥤 שתייה' : '🍲 אוכל');
-    document.getElementById('dlvItems').innerHTML = DLV_ITEMS.map((it, k) =>
-      (k === 0 || grp(it, k) !== grp(DLV_ITEMS[k-1], k-1) ? `<div class="dlv-grp">${grp(it, k)}</div>` : '') +
-      `<div class="dlv-item"><div class="tx">${esc(it.name)}${it.desc ? `<small>${esc(it.desc)}</small>` : ''}</div><div class="pr">${it.price} ₪</div>
-        <div class="qty"><button type="button" onclick="chg(${k},-1)" aria-label="פחות">−</button><span>${qty[k]}</span><button type="button" onclick="chg(${k},1)" aria-label="יותר">+</button></div></div>`).join('');
+    let html = '', open = false;
+    DLV_ITEMS.forEach((it, k) => {
+      if (k === 0 || grp(it, k) !== grp(DLV_ITEMS[k-1], k-1)) { if (open) html += '</div>'; html += `<div class="dlv-grp">${grp(it, k)}</div><div class="menu-grid">`; open = true; }
+      html += cardHtml(it, k);
+    });
+    document.getElementById('dlvItems').innerHTML = html + (open ? '</div>' : '');
     document.getElementById('dlvSum').textContent = dlvSum() + ' ₪';
   }
   const dlvSum = () => DLV_ITEMS.reduce((a, it, k) => a + qty[k] * it.price, 0);
-  function chg(k, n){ qty[k] = Math.max(0, Math.min(30, qty[k] + n)); drawItems(); }
+  function chg(k, n){ qty[k] = Math.max(0, Math.min(30, qty[k] + n)); const e = document.getElementById('dq' + k); if (!e) return drawItems(); e.textContent = qty[k]; document.getElementById('dc' + k).classList.toggle('sel', qty[k] > 0); document.getElementById('dlvSum').textContent = dlvSum() + ' ₪'; }
   drawItems();
   DLV_CITIES.forEach(c => dCity.add(new Option(c, c)));
   [...dateSel.options].forEach(o => dDate.add(new Option(o.text, o.value)));
