@@ -48,6 +48,12 @@
   .meta{color:var(--muted);font-size:.92rem;margin-top:2px}
   .meta a{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--gold);direction:ltr;unicode-bidi:isolate}
   .note{margin-top:6px;font-size:.92rem;background:#0f0d09;border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+  .acts{display:flex;gap:8px;margin-top:10px}
+  .acts button{flex:1;padding:9px 6px;border-radius:10px;border:1px solid var(--line);background:#141109;color:var(--ink);font:inherit;font-size:.9rem;font-weight:700;cursor:pointer}
+  .acts .ok{border-color:#3f6b3c;color:var(--ok)}
+  .acts .no{border-color:#6b3a33;color:var(--bad)}
+  .acts button:disabled{opacity:.5;cursor:wait}
+  .tag.came{color:var(--ok);border-color:#3f6b3c}
   .tag{display:inline-block;font-size:.75rem;border:1px solid var(--line);border-radius:6px;padding:0 6px;margin-inline-start:6px;color:var(--muted);vertical-align:middle;text-decoration:none}
   .empty{text-align:center;color:var(--muted);padding:30px 10px}
   .foot{display:flex;justify-content:space-between;color:#6b6150;font-size:.8rem;margin-top:18px}
@@ -164,12 +170,28 @@
       return `<div class="bk ${cls}">
         <div class="tm">${esc(r.time)}</div>
         <div>
-          <div class="nm">${esc(r.name)}<span class="tag">${isBarber ? '✂️ מספרה' : isDlv ? '🛵 משלוח' : '🍝 מסעדה'}</span>${r.status && r.status !== 'חדש' ? `<span class="tag">${esc(r.status)}</span>` : ''}</div>
+          <div class="nm">${esc(r.name)}<span class="tag">${isBarber ? '✂️ מספרה' : isDlv ? '🛵 משלוח' : '🍝 מסעדה'}</span>${r.status && r.status !== 'חדש' ? `<span class="tag ${r.status === 'הגיע' ? 'came' : ''}">${r.status === 'הגיע' ? '✅ ' : ''}${esc(r.status)}</span>` : ''}</div>
           <div class="meta">${isBarber ? '💈 ' + esc(r.barber || 'ללא העדפה') : isDlv ? '🍲 ' + esc(r.guests) + ' מנות' : '👥 ' + esc(r.guests) + ' סועדים'} · 📱 <a href="tel:${esc(String(r.phone).replace(/[^\d+]/g,''))}">${esc(r.phone)}</a></div>
           ${r.notes ? `<div class="note">📝 ${esc(r.notes)}</div>` : ''}
+          ${r.row ? `<div class="acts">${r.status === 'בוטל'
+            ? `<button type="button" onclick="mark(${r.row}, 'חדש', this)">↩️ החזר הזמנה</button>`
+            : (r.status !== 'הגיע' ? `<button type="button" class="ok" onclick="mark(${r.row}, 'הגיע', this)">✅ ${isDlv ? 'נמסר' : 'הגיע'}</button>` : '') +
+              `<button type="button" class="no" onclick="mark(${r.row}, 'בוטל', this)">❌ ביטול</button>`}</div>` : ''}
         </div>
       </div>`;
     }).join('') : '<div class="card empty">אין הזמנות ליום הזה</div>';
+  }
+
+  async function mark(row, status, btn){
+    const r = data.find(x => x.row === row); if (!r) return;
+    if (status === 'בוטל' && !confirm('לבטל את ההזמנה של ' + r.name + ' בשעה ' + r.time + '?')) return;
+    btn.disabled = true;
+    try {
+      const res = await post({ action: 'status', pin, row, status, date, time: r.time, name: r.name });
+      if (!res.ok) alert(res.error === 'changed' ? 'הטבלה השתנתה – מרענן את הרשימה.' : 'לא הצלחנו לעדכן. נסו שוב.');
+      else r.status = status;
+    } catch (e) { alert('אין חיבור. נסו שוב.'); }
+    render(); load();
   }
 
   function setDate(s){ date = s; data = []; render(); load(); }
