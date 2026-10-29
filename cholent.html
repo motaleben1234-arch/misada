@@ -566,7 +566,7 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
   function chg(k, n){ qty[k] = Math.max(0, Math.min(30, qty[k] + n)); const e = document.getElementById('dq' + k); if (!e) return drawItems(); e.textContent = qty[k]; document.getElementById('dc' + k).classList.toggle('sel', qty[k] > 0); document.getElementById('dlvSum').textContent = dlvSum() + ' ₪'; }
   drawItems();
   DLV_CITIES.forEach(c => dCity.add(new Option(c, c)));
-  [...dateSel.options].forEach(o => dDate.add(new Option(o.text, o.value)));
+  [...dateSel.options].forEach(o => { if (o.value === today && DLV_WINDOWS[DLV_WINDOWS.length - 1] <= nowHM()) return; dDate.add(new Option(o.text, o.value)); });
   function fillWindows(){
     const isToday = dDate.value === today, hm = nowHM();
     dTime.innerHTML = '';
@@ -587,7 +587,7 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
     const sum = dlvSum();
     if (!list.length) { alert('בחרו לפחות מנה אחת 🍲'); return; }
     const opt = dTime.options[dTime.selectedIndex];
-    if (!opt || opt.disabled) { alert('אין חלון משלוח פנוי בחמישי הזה. בחרו חמישי אחר.'); return; }
+    if (!opt || opt.disabled) { alert('המשלוחים להיום כבר נגמרו. בחרו חמישי אחר.'); return; }
     const btn = e.target.querySelector('button[type=submit]');
     const addr = document.getElementById('dAddr').value.trim() + ', ' + dCity.value;
     const extra = document.getElementById('dNotes').value.trim();
