@@ -82,6 +82,8 @@
   .done{text-align:center}
   .check{width:66px;height:66px;border-radius:50%;background:var(--green);color:var(--gold2);font-size:2rem;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;border:2px solid var(--gold)}
   .summary{background:#fffaf0;border:1px dashed #cdb985;border-radius:12px;padding:14px;margin-top:14px;text-align:right}
+  .cal-row{display:flex;gap:8px;margin-top:10px}
+  .cal-btn{flex:1;padding:11px 6px;border-radius:12px;border:2px solid var(--gold);background:#fffaf0;color:var(--green);text-decoration:none;font-weight:800;font-size:.9rem}
   .wa-btn{display:block;margin-top:16px;padding:13px;border-radius:12px;background:#25d366;color:#fff;text-decoration:none;font-weight:700}
 
   /* ===== תפריט ===== */
@@ -294,6 +296,10 @@
     <div class="summary" id="summary"></div>
     <p class="note" style="margin-top:14px">👇 כדי שנקבל את ההזמנה גם בוואטסאפ – לחצו ואז "שלח"</p>
     <a id="waBtn" class="wa-btn" target="_blank" rel="noopener">💬 שלחו את ההזמנה למסעדה בוואטסאפ</a>
+    <div class="cal-row">
+      <a id="calG" class="cal-btn" target="_blank" rel="noopener">📅 הוספה ליומן גוגל</a>
+      <a id="calI" class="cal-btn" download="הזמנה-צולנט.ics">🍎 הוספה ליומן אייפון</a>
+    </div>
     <button type="button" class="btn" onclick="newBooking()">הזמנה נוספת</button>
   </div>
 
@@ -468,12 +474,28 @@
       `<b>${esc(b.name)}</b><br>🍲 ${esc(list.join(', '))}<br>💰 סה״כ ${sum} ₪<br>📍 ${esc(addr)}<br>📅 חמישי ${d} · ${esc(win)}<br>📱 ${esc(b.phone)}` + (extra ? `<br>📝 ${esc(extra)}` : '');
     const msg = `שלום! הזמנתי עכשיו משלוח באתר 🛵\n👤 ${b.name} · ${b.phone}\n🍲 ${list.join(', ')}\n💰 סה״כ ${sum} ₪\n📍 ${addr}\n📅 חמישי ${d} · ${win}` + (extra ? `\n📝 ${extra}` : '');
     document.getElementById('waBtn').href = 'https://wa.me/' + BIZ_WA + '?text=' + encodeURIComponent(msg);
+    setCalendar(b.date, b.time, 1, "משלוח צ'ולנט 🛵", list.join(', '), addr);
     lastMode = 'dlv';
     ['formCard','dlvCard','menuCard'].forEach(c => document.getElementById(c).classList.add('hidden'));
     document.getElementById('doneCard').classList.remove('hidden');
     window.scrollTo({top:0,behavior:'smooth'});
   });
   let lastMode = 'book';
+
+  // הוספה ליומן – dur = כמה שעות, remind = כמה זמן לפני להזכיר
+  function setCalendar(dateStr, time, dur, title, det, loc){
+    const st = dateStr.replace(/-/g, '') + 'T' + time.replace(':', '') + '00';
+    const [hh, mm] = time.split(':').map(Number);
+    const endD = new Date(dateStr + 'T12:00:00'); if (hh + dur >= 24) endD.setDate(endD.getDate() + 1);
+    const en = endD.toISOString().slice(0, 10).replace(/-/g, '') + 'T' + String((hh + dur) % 24).padStart(2, '0') + String(mm).padStart(2, '0') + '00';
+    document.getElementById('calG').href = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(title) +
+      '&dates=' + st + '/' + en + '&ctz=Asia/Jerusalem&details=' + encodeURIComponent(det) + '&location=' + encodeURIComponent(loc);
+    const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//misada//HE', 'BEGIN:VEVENT', 'UID:' + Date.now() + '@misada',
+      'DTSTAMP:' + new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z',
+      'DTSTART;TZID=Asia/Jerusalem:' + st, 'DTEND;TZID=Asia/Jerusalem:' + en, 'SUMMARY:' + title, 'DESCRIPTION:' + det, 'LOCATION:' + loc,
+      'BEGIN:VALARM', 'TRIGGER:-PT1H', 'ACTION:DISPLAY', 'DESCRIPTION:' + title, 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+    document.getElementById('calI').href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+  }
 
   function show(id){ ['formCard','doneCard'].forEach(c => document.getElementById(c).classList.toggle('hidden', c !== id)); window.scrollTo({top:0,behavior:'smooth'}); }
   function tab(t){
@@ -518,6 +540,7 @@
       `<b>${esc(b.name)}</b><br>📅 חמישי ${d} בשעה ${b.time}<br>👥 ${b.guests} אנשים<br>📱 ${esc(b.phone)}` + (extra ? `<br>📝 ${esc(extra)}` : '');
     const msg = `שלום! הזמנתי עכשיו שולחן באתר 🍲\n👤 ${b.name} · ${b.phone}\n📅 חמישי ${d} בשעה ${b.time}\n👥 ${b.guests} אנשים` + (extra ? `\n📝 ${extra}` : '');
     document.getElementById('waBtn').href = 'https://wa.me/' + BIZ_WA + '?text=' + encodeURIComponent(msg);
+    setCalendar(b.date, b.time, 2, "צ'ולנט ארוהיגיקייט 🍲", `שולחן על שם ${b.name} · ${b.guests} אנשים`, 'בר כוכבא 21, בני ברק');
     show('doneCard');
     loadSlots();
   });
