@@ -137,6 +137,9 @@
   .mcard .pic svg{width:92%;height:92%}
   .mcard .pic img{width:100%;height:100%;object-fit:cover;display:block}
   .mcard .nm{font-weight:800;color:var(--green);padding:8px 6px 0;line-height:1.25;font-size:.95rem;flex:1}
+  .mcard.nopic{display:flex;flex-direction:column;justify-content:center;gap:4px;min-height:110px;padding:14px 4px;background:linear-gradient(180deg,#fffaf0,#f6e8c6)}
+  .mcard.nopic .pr{margin-top:4px!important}
+  .mcard.nopic:before{content:"◆";color:var(--gold);font-size:.7rem;display:block}
   .mcard .ds{font-size:.75rem;color:#7a6a52;padding:2px 6px 0}
   .mcard .pr{font-family:'Suez One',serif;color:var(--red);font-size:1.3rem;padding:2px 0 8px}
   .mcard .badge{position:absolute;top:8px;right:8px;background:var(--gold);color:var(--deep);font-size:.72rem;font-weight:800;border-radius:8px;padding:2px 7px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
@@ -447,15 +450,15 @@
       { icon: 'i-plate', pic: 'photo', size: '½', name: "צ'ולנט בשרי – חצי ליטר", desc: 'סיר חם של בית, המנה כוללת בשר', price: 50, chef: true, dlv: true },
       { icon: 'i-plate', pic: 'photo', size: '¼', name: "צ'ולנט בשרי – רבע ליטר", desc: 'המנה כוללת בשר', price: 35, dlv: true },
       { icon: 'i-kugel', pic: 'img:m-kugel.jpg', name: 'קוגל אטריות', desc: '', price: 8, dlv: true },
-      { icon: 'i-kugel', pic: 'p-kugel2', name: 'קוגל תפוחי אדמה', desc: '', price: 8, dlv: true },
-      { icon: 'i-bread', pic: 'img:d-roll.jpg', name: 'לחמנייה', desc: '', price: 4, dlv: true },
-      { icon: 'i-bread', pic: 'p-challah', name: 'חצי חלה', desc: '', price: 12, dlv: true }
+      { icon: 'i-bread', pic: 'img:d-roll.jpg', name: 'חצי חלה', desc: '', price: 12, dlv: true },
+      { icon: 'i-bread', pic: '', name: 'לחמנייה', desc: '', price: 4, dlv: true },
+      { icon: 'i-kugel', pic: '', name: 'קוגל תפוחי אדמה', desc: '', price: 8, dlv: true }
     ]},
     { cat: 'משהו לשתות', items: [
-      { icon: 'i-can', pic: 'img:d-can.jpg', name: 'שתייה בפחית', desc: 'קוקה קולה, זירו, ספרייט, פאנטה', price: 10, dlv: true },
-      { icon: 'i-can', pic: 'img:d-bottle.jpg', name: 'שתייה בבקבוק', desc: 'קולה, מים, מים בטעמים, מיץ ענבים', price: 12, dlv: true },
       { icon: 'i-beer', pic: 'img:m-beer.jpg', size: '⅓', name: 'בירה מהחבית – שליש ליטר', desc: 'קרה, ישר מהברז', price: 24 },
-      { icon: 'i-beer', pic: 'img:m-beer.jpg', size: '½', name: 'בירה מהחבית – חצי ליטר', desc: 'קרה, ישר מהברז', price: 32 }
+      { icon: 'i-beer', pic: 'img:m-beer.jpg', size: '½', name: 'בירה מהחבית – חצי ליטר', desc: 'קרה, ישר מהברז', price: 32 },
+      { icon: 'i-can', pic: '', name: 'שתייה בפחית', desc: 'קוקה קולה, זירו, ספרייט, פאנטה', price: 10, dlv: true },
+      { icon: 'i-can', pic: '', name: 'שתייה בבקבוק', desc: 'קולה, מים, מים בטעמים, מיץ ענבים', price: 12, dlv: true }
     ]}
   ];
   const DEAL = { name: "דיליל שישי (צ'ולנט חצי ליטר + לחמנייה + פחית)", desc: 'הכי משתלם', price: 60, short: 'דיליל שישי' };
@@ -480,9 +483,10 @@
     : `<svg viewBox="${({ 'p-kugel1': '14 26 92 92', 'p-kugel2': '14 26 92 92', 'p-roll': '10 22 100 100' })[i.pic] || '0 0 120 120'}" role="img" aria-label="${esc(i.name)}"><use href="#${i.pic}"/></svg>`;
   document.getElementById('menuList').innerHTML = MENU.map(c =>
     `<div class="cat">${esc(c.cat)}</div><div class="menu-grid">` + c.items.map(i =>
-      `<div class="mcard">${i.chef ? '<span class="badge">⭐ הכי מבוקש</span>' : ''}${i.size ? `<span class="size">${i.size}</span>` : ''}
-        <div class="pic">${picHtml(i)}</div>
+      `<div class="mcard${i.pic ? '' : ' nopic'}">${i.chef ? '<span class="badge">⭐ הכי מבוקש</span>' : ''}${i.size ? `<span class="size">${i.size}</span>` : ''}
+        ${i.pic ? `<div class="pic">${picHtml(i)}</div>` : ''}
         <div class="nm">${esc(i.name.replace(/ – .*/, ''))}</div>${i.size ? `<div class="ds">${esc(i.name.split(' – ')[1] || '')}</div>` : ''}
+${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
         <div class="pr">${esc(i.price)} ₪</div></div>`).join('') + '</div>').join('');
 
   // ימי חמישי הקרובים
