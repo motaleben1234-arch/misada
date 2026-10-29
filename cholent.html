@@ -141,6 +141,12 @@
   .mcard.nopic:not(:has(.emo)):before{content:"◆";color:var(--gold);font-size:.7rem;display:block}
   .mcard .emo{font-size:2rem;line-height:1}
   .mcard .ds{font-size:.75rem;color:#7a6a52;padding:2px 6px 0}
+  .cart-bar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,var(--green2),var(--deep));border-top:2px solid var(--gold);box-shadow:0 -6px 18px rgba(0,0,0,.35);color:var(--cream)}
+  .cart-bar[hidden]{display:none}
+  .cart-bar .cb-tx{font-size:1rem}
+  .cart-bar .cb-tx b{color:var(--gold2);font-size:1.12rem}
+  .cart-bar button{border:0;border-radius:12px;padding:10px 14px;font:inherit;font-weight:800;background:linear-gradient(180deg,var(--gold2),var(--gold));color:var(--deep);cursor:pointer;white-space:nowrap}
+  body.has-cart{padding-bottom:76px}
   .dcard .pr{padding-bottom:4px!important}
   .dcard .dq{justify-content:center;padding:0 0 10px}
   .dcard .dq button{width:36px;height:36px}
@@ -561,9 +567,11 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
     });
     document.getElementById('dlvItems').innerHTML = html + (open ? '</div>' : '');
     document.getElementById('dlvSum').textContent = dlvSum() + ' ₪';
+    if (typeof updCart === 'function') updCart();
   }
   const dlvSum = () => DLV_ITEMS.reduce((a, it, k) => a + qty[k] * it.price, 0);
-  function chg(k, n){ qty[k] = Math.max(0, Math.min(30, qty[k] + n)); const e = document.getElementById('dq' + k); if (!e) return drawItems(); e.textContent = qty[k]; document.getElementById('dc' + k).classList.toggle('sel', qty[k] > 0); document.getElementById('dlvSum').textContent = dlvSum() + ' ₪'; }
+  function updCart(){ const n = qty.reduce((a,b)=>a+b,0), show = n > 0 && !document.getElementById('dlvCard').classList.contains('hidden'); const b = document.getElementById('cartBar'); if (!b) return; b.hidden = !show; document.body.classList.toggle('has-cart', show); document.getElementById('cbCount').textContent = n; document.getElementById('cbSum').textContent = dlvSum() + ' ₪'; }
+  function chg(k, n){ qty[k] = Math.max(0, Math.min(30, qty[k] + n)); const e = document.getElementById('dq' + k); if (!e) return drawItems(); e.textContent = qty[k]; document.getElementById('dc' + k).classList.toggle('sel', qty[k] > 0); document.getElementById('dlvSum').textContent = dlvSum() + ' ₪'; updCart(); }
   drawItems();
   DLV_CITIES.forEach(c => dCity.add(new Option(c, c)));
   [...dateSel.options].forEach(o => { if (o.value === today && DLV_WINDOWS[DLV_WINDOWS.length - 1] <= nowHM()) return; dDate.add(new Option(o.text, o.value)); });
@@ -620,6 +628,7 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
     setCalendar(b.date, b.time, 1, "משלוח צ'ולנט 🛵", list.join(', '), addr);
     lastMode = 'dlv';
     ['formCard','dlvCard','menuCard'].forEach(c => document.getElementById(c).classList.add('hidden'));
+    updCart();
     document.getElementById('doneCard').classList.remove('hidden');
     window.scrollTo({top:0,behavior:'smooth'});
   });
@@ -650,6 +659,7 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
     document.getElementById('dlvCard').classList.toggle('hidden', t !== 'dlv');
     document.getElementById('menuCard').classList.toggle('hidden', t !== 'menu');
     document.getElementById('doneCard').classList.add('hidden');
+    updCart();
   }
 
   document.getElementById('bookingForm').addEventListener('submit', async e => {
@@ -694,5 +704,9 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
     document.getElementById('bookingForm').reset(); guestSel.value = 4; loadSlots(); show('formCard');
   }
 </script>
+<div id="cartBar" class="cart-bar" hidden>
+  <div class="cb-tx">🛒 <b id="cbCount">0</b> פריטים · סה״כ <b id="cbSum">0 ₪</b></div>
+  <button type="button" onclick="document.querySelector('.dlv-total').scrollIntoView({behavior:'smooth',block:'start'})">להמשך ההזמנה ⬇</button>
+</div>
 </body>
 </html>
