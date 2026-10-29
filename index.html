@@ -112,6 +112,8 @@
   .info div{background:#17140f;border:1px solid var(--line);box-shadow:none;color:var(--muted)}
   .info b{color:var(--gold);font-family:'Frank Ruhl Libre',serif;font-size:1.05rem}
   footer{color:#6b6150;letter-spacing:1px}
+  .wa-btn{display:block;margin-top:18px;padding:13px;border-radius:12px;border:1px solid #25d366;color:#25d366;text-decoration:none;font-weight:700;letter-spacing:.5px}
+  .wa-btn:hover{background:#25d366;color:#0e0c0a}
 </style>
 </head>
 <body>
@@ -196,6 +198,7 @@
     <h2>ההזמנה התקבלה!</h2>
     <p>נשמח לראותך. נתראה בקרוב 🍝</p>
     <div class="summary" id="summary"></div>
+    <a id="waBtn" class="wa-btn" target="_blank" rel="noopener">💬 שמור את האישור בוואטסאפ</a>
     <button onclick="newBooking()">הזמנה נוספת</button>
   </div>
 
@@ -300,6 +303,8 @@
     document.getElementById('summary').innerHTML =
       `<b>${esc(b.name)}</b><br>📅 ${d} בשעה ${b.time}<br>👥 ${b.guests} סועדים<br>📱 ${esc(b.phone)}` +
       (b.notes ? `<br>📝 ${esc(b.notes)}` : '');
+    const msg = `✅ אישור הזמנה – טרטוריה בלה\n${b.name}\n📅 ${d} בשעה ${b.time}\n👥 ${b.guests} סועדים` + (b.notes ? `\n📝 ${b.notes}` : '') + `\nנתראה! 🍝`;
+    document.getElementById('waBtn').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
     show('doneCard');
   });
 
