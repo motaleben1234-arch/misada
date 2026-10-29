@@ -117,7 +117,8 @@
   .wa-btn{display:block;margin-top:16px;padding:13px;border-radius:12px;background:#25d366;color:#fff;text-decoration:none;font-weight:700}
 
   /* ===== תפריט ===== */
-  .cat{font-family:'Suez One',serif;color:var(--red);text-align:center;font-size:1.3rem;margin:22px 0 6px}
+  .cat{font-family:'Suez One',serif;color:var(--cream);background:linear-gradient(180deg,var(--green2),var(--deep));border:2px solid var(--gold);border-radius:12px;text-align:center;font-size:1.2rem;padding:7px 10px;margin:22px 0 12px}
+  .dlv-grp{font-family:'Suez One',serif;color:var(--cream);background:linear-gradient(180deg,var(--green2),var(--deep));border:1px solid var(--gold);border-radius:10px;padding:5px 12px;margin:16px 0 4px;font-size:1.02rem}
   .cat:first-of-type{margin-top:4px}
   .dish{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px dashed #d4c194}
   .dish:last-child{border-bottom:0}
@@ -439,7 +440,7 @@
   // ===== התפריט – כאן משנים מנות ומחירים =====
   // dlv: true = אפשר להזמין גם במשלוח
   const MENU = [
-    { cat: 'מהסיר לצלחת', items: [
+    { cat: '🍲 אוכל – מהסיר לצלחת', items: [
       { icon: 'i-plate', pic: 'photo', size: '½', name: "צ'ולנט בשרי – חצי ליטר", desc: 'סיר חם של בית, המנה כוללת בשר', price: 50, chef: true, dlv: true },
       { icon: 'i-plate', pic: 'photo', size: '¼', name: "צ'ולנט בשרי – רבע ליטר", desc: 'המנה כוללת בשר', price: 35, dlv: true },
       { icon: 'i-kugel', pic: 'img:m-kugel.jpg', name: 'קוגל אטריות', desc: '', price: 8, dlv: true },
@@ -447,7 +448,7 @@
       { icon: 'i-bread', pic: '', name: 'לחמנייה', desc: '', price: 4, dlv: true },
       { icon: 'i-kugel', pic: '', name: 'קוגל תפוחי אדמה', desc: '', price: 8, dlv: true }
     ]},
-    { cat: 'משהו לשתות', items: [
+    { cat: '🥤 שתייה – משהו לשתות', items: [
       { icon: 'i-beer', pic: 'img:m-beer.jpg', size: '⅓', name: 'בירה מהחבית – שליש ליטר', desc: 'קרה, ישר מהברז', price: 24 },
       { icon: 'i-beer', pic: 'img:m-beer.jpg', size: '½', name: 'בירה מהחבית – חצי ליטר', desc: 'קרה, ישר מהברז', price: 32 },
       { icon: 'i-can', pic: '', name: 'שתייה בפחית', desc: 'קוקה קולה, זירו, ספרייט, פאנטה', price: 10, dlv: true },
@@ -529,7 +530,9 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
   const qty = DLV_ITEMS.map(() => 0);
   const dDate = document.getElementById('dDate'), dTime = document.getElementById('dTime'), dCity = document.getElementById('dCity');
   function drawItems(){
+    const grp = (it, k) => k === 0 ? '🎁 מבצע' : (/i-can|i-beer/.test(it.icon) ? '🥤 שתייה' : '🍲 אוכל');
     document.getElementById('dlvItems').innerHTML = DLV_ITEMS.map((it, k) =>
+      (k === 0 || grp(it, k) !== grp(DLV_ITEMS[k-1], k-1) ? `<div class="dlv-grp">${grp(it, k)}</div>` : '') +
       `<div class="dlv-item"><div class="tx">${esc(it.name)}${it.desc ? `<small>${esc(it.desc)}</small>` : ''}</div><div class="pr">${it.price} ₪</div>
         <div class="qty"><button type="button" onclick="chg(${k},-1)" aria-label="פחות">−</button><span>${qty[k]}</span><button type="button" onclick="chg(${k},1)" aria-label="יותר">+</button></div></div>`).join('');
     document.getElementById('dlvSum').textContent = dlvSum() + ' ₪';
