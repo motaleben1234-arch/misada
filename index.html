@@ -198,7 +198,8 @@
     <h2>ההזמנה התקבלה!</h2>
     <p>נשמח לראותך. נתראה בקרוב 🍝</p>
     <div class="summary" id="summary"></div>
-    <a id="waBtn" class="wa-btn" target="_blank" rel="noopener">💬 שמור את האישור בוואטסאפ</a>
+    <p style="margin-top:16px;font-size:.88rem;color:var(--muted)">👇 כדי שנקבל את ההזמנה גם בוואטסאפ – לחצו ואז "שלח"</p>
+    <a id="waBtn" class="wa-btn" target="_blank" rel="noopener">💬 שלחו את ההזמנה למסעדה בוואטסאפ</a>
     <button onclick="newBooking()">הזמנה נוספת</button>
   </div>
 
@@ -336,8 +337,9 @@
     document.getElementById('summary').innerHTML =
       `<b>${esc(b.name)}</b><br>📅 ${d} בשעה ${b.time}<br>👥 ${b.guests} סועדים<br>📱 ${esc(b.phone)}` +
       (b.notes ? `<br>📝 ${esc(b.notes)}` : '');
-    const msg = `✅ אישור הזמנה – טרטוריה בלה\n${b.name}\n📅 ${d} בשעה ${b.time}\n👥 ${b.guests} סועדים` + (b.notes ? `\n📝 ${b.notes}` : '') + `\nנתראה! 🍝`;
-    document.getElementById('waBtn').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+    const BIZ_WA = '972559585057';   // וואטסאפ של המסעדה – לשם הלקוח שולח את ההזמנה
+    const msg = `שלום! הזמנתי עכשיו שולחן באתר 🍝\n👤 ${b.name} · ${b.phone}\n📅 ${d} בשעה ${b.time}\n👥 ${b.guests} סועדים` + (b.notes ? `\n📝 ${b.notes}` : '');
+    document.getElementById('waBtn').href = 'https://wa.me/' + BIZ_WA + '?text=' + encodeURIComponent(msg);
     show('doneCard');
     loadSlots();
   });
