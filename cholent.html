@@ -291,7 +291,7 @@
   <div class="tabs-h top">מה תרצו להזמין?</div>
   <div class="tabs">
     <button type="button" class="active" id="tabBook" onclick="go('book')"><span class="ti">🍲</span><span class="tt">שולחן</span><span class="ts">שמירת מקום לחמישי בערב</span></button>
-    <button type="button" id="tabDlv" onclick="go('dlv')"><span class="ti">🛵</span><span class="tt">משלוח</span><span class="ts">חם עד הבית בבני ברק</span></button>
+    <button type="button" id="tabDlv" onclick="go('dlv')"><span class="ti">🛵</span><span class="tt">משלוח</span><span class="ts">חם עד הבית בבני ברק והסביבה</span></button>
     <button type="button" id="tabMenu" onclick="go('menu')"><span class="ti">📜</span><span class="tt">תפריט</span><span class="ts">כל המנות והמחירים</span></button>
   </div>
   <div class="rule"></div>
@@ -369,7 +369,7 @@
   <div class="card hidden" id="dlvCard">
     <h2>משלוח הביתה</h2>
     <div class="h2orn"><i></i><b></b><i></i></div>
-    <p class="area">🛵 משלוחים בבני ברק בלבד · בימי חמישי</p>
+    <p class="area">🛵 משלוחים בבני ברק והסביבה · בימי חמישי</p>
     <form id="dlvForm">
       <label>מה להביא לכם?</label>
       <div id="dlvItems"></div>
@@ -433,7 +433,7 @@
 
   <div class="info">
     <div><svg style="color:var(--gold2)"><use href="#i-clock"/></svg><span><b>שעות פתיחה</b>כל חמישי · מ־18:00 ועד אחרון הלקוחות</span></div>
-    <div><span style="font-size:1.8rem;width:34px;text-align:center">🛵</span><span><b>משלוחים</b>בבני ברק בלבד · בימי חמישי</span></div>
+    <div><span style="font-size:1.8rem;width:34px;text-align:center">🛵</span><span><b>משלוחים</b>בני ברק והסביבה · בימי חמישי</span></div>
     <a href="https://wa.me/972553125739" target="_blank" rel="noopener"><svg style="color:var(--gold2)"><use href="#i-phone"/></svg><span><b>טלפון / וואטסאפ</b><span class="num">055-3125739</span></span></a>
     <div><svg style="color:var(--gold2)"><use href="#i-cow"/></svg><span><b>כשרות</b>הבשר בכשרות הרב מחפוד</span></div>
   </div>
@@ -477,7 +477,7 @@
   const BIZ_WA = '972553125739';   // וואטסאפ של העסק – לשם הלקוח שולח את ההזמנה
 
   // ===== משלוחים – כאן משנים ערים, שעות ומה אפשר להזמין =====
-  const DLV_CITIES = ['בני ברק'];
+  const DLV_CITIES = ['בני ברק', 'רמת גן', 'גבעתיים', 'פתח תקווה', 'קריית אונו', 'גבעת שמואל'];
   const DLV_WINDOWS = ['18:00', '19:00', '20:00', '21:00', '22:00'];   // כל חלון – שעה אחת
   const DLV_ITEMS = [DEAL].concat(...MENU.map(c => c.items.filter(i => i.dlv)));
 
