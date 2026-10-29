@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>דף צוות – הזמנות</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Frank+Ruhl+Libre:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0e0c0a;--card:#17140f;--ink:#f3ead8;--muted:#a89a80;--gold:#c9a45c;--line:#3a3225;--ok:#7fbf7a;--bad:#d97a6a}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg)}
+  body{font-family:'Heebo',sans-serif;background:radial-gradient(ellipse at top,#1d1812 0%,#0e0c0a 60%) fixed;color:var(--ink);line-height:1.5;font-weight:300;min-height:100vh}
+  header{position:relative;text-align:center;padding:30px 16px 24px;border-bottom:1px solid var(--line)}
+  header::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:140px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+  .bsd{position:absolute;top:10px;right:14px;font-size:.85rem;color:var(--gold);font-weight:500}
+  h1{font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:2rem;background:linear-gradient(180deg,#f3dfa8,#c9a45c 60%,#9c7a37);-webkit-background-clip:text;background-clip:text;color:transparent}
+  header p{color:var(--muted);font-size:.9rem}
+  main{max-width:640px;margin:20px auto 40px;padding:0 16px}
+  .card{background:linear-gradient(180deg,#1b1711,#141109);border:1px solid var(--line);border-radius:16px;padding:24px 20px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+  .hidden{display:none!important}
+  label{display:block;color:var(--muted);margin-bottom:8px}
+  input{width:100%;padding:14px;border:1px solid var(--line);border-radius:12px;font:inherit;font-size:1.3rem;letter-spacing:6px;text-align:center;background:#0f0d09;color:var(--ink)}
+  input[type=date]{font-size:1rem;letter-spacing:0;color-scheme:dark;padding:10px}
+  input:focus{outline:1px solid var(--gold)}
+  .btn{width:100%;margin-top:16px;padding:14px;border:0;border-radius:12px;background:linear-gradient(180deg,#d9b56c,#a8843f);color:#120f0b;font:inherit;font-weight:700;font-size:1.05rem;cursor:pointer}
+  .btn:disabled{opacity:.6}
+  .err{color:var(--bad);text-align:center;margin-top:10px;min-height:1.5em}
+  .nav{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center}
+  .nav button{border:1px solid var(--line);background:#141109;color:var(--gold);border-radius:10px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer}
+  .day{text-align:center}
+  .day b{display:block;font-family:'Frank Ruhl Libre',serif;font-size:1.35rem;color:var(--gold)}
+  .day small{color:var(--muted)}
+  .row2{display:flex;gap:8px;margin-top:12px;align-items:center}
+  .row2 input{flex:1}
+  .chips{display:flex;gap:6px;margin-top:12px}
+  .chips button{flex:1;border:1px solid var(--line);background:#141109;color:var(--muted);border-radius:999px;padding:8px;font:inherit;cursor:pointer}
+  .chips button.on{background:linear-gradient(180deg,#d9b56c,#a8843f);color:#120f0b;font-weight:700;border-color:transparent}
+  .sum{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+  .sum div{background:#17140f;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;color:var(--muted);font-size:.9rem}
+  .sum b{display:block;font-family:'Frank Ruhl Libre',serif;font-size:1.8rem;color:var(--gold);line-height:1.1}
+  .list{display:grid;gap:10px}
+  .bk{display:grid;grid-template-columns:74px 1fr;gap:12px;background:linear-gradient(180deg,#1b1711,#141109);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .bk.past{opacity:.55}
+  .bk.cancel{opacity:.4;text-decoration:line-through}
+  .tm{font-family:'Frank Ruhl Libre',serif;font-size:1.5rem;font-weight:700;color:var(--gold);text-align:center;border-left:1px solid var(--line);padding-left:10px}
+  .nm{font-weight:700;font-size:1.1rem}
+  .meta{color:var(--muted);font-size:.92rem;margin-top:2px}
+  .meta a{color:var(--ink);text-decoration:none;border-bottom:1px dotted var(--gold);direction:ltr;unicode-bidi:isolate}
+  .note{margin-top:6px;font-size:.92rem;background:#0f0d09;border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+  .tag{display:inline-block;font-size:.75rem;border:1px solid var(--line);border-radius:6px;padding:0 6px;margin-inline-start:6px;color:var(--muted);vertical-align:middle;text-decoration:none}
+  .empty{text-align:center;color:var(--muted);padding:30px 10px}
+  .foot{display:flex;justify-content:space-between;color:#6b6150;font-size:.8rem;margin-top:18px}
+  .foot button{background:none;border:0;color:var(--muted);text-decoration:underline;font:inherit;cursor:pointer}
+</style>
+</head>
+<body>
+<header>
+  <div class="bsd">בס״ד</div>
+  <h1>דף צוות</h1>
+  <p>ההזמנות של היום, מסודרות לפי שעה</p>
+</header>
+
+<main>
+  <!-- כניסה -->
+  <div class="card" id="loginCard">
+    <form id="loginForm">
+      <label for="pin">סיסמת צוות</label>
+      <input id="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="12" required placeholder="••••••">
+      <button class="btn" type="submit">כניסה</button>
+      <div class="err" id="loginErr"></div>
+    </form>
+  </div>
+
+  <!-- הזמנות -->
+  <div class="hidden" id="board">
+    <div class="card">
+      <div class="nav">
+        <button type="button" onclick="shift(-1)" aria-label="יום קודם">›</button>
+        <div class="day"><b id="dayName"></b><small id="dayDate"></small></div>
+        <button type="button" onclick="shift(1)" aria-label="יום הבא">‹</button>
+      </div>
+      <div class="row2">
+        <input type="date" id="datePick">
+        <button type="button" class="nav-today" onclick="setDate(todayStr())" style="border:1px solid var(--line);background:#141109;color:var(--gold);border-radius:10px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer">היום</button>
+      </div>
+      <div class="chips" id="chips">
+        <button type="button" data-f="all" class="on">הכול</button>
+        <button type="button" data-f="restaurant">🍝 מסעדה</button>
+        <button type="button" data-f="barber">✂️ מספרה</button>
+      </div>
+    </div>
+
+    <div class="sum">
+      <div><b id="sumCount">0</b>הזמנות</div>
+      <div><b id="sumGuests">0</b><span id="sumLabel">סועדים</span></div>
+    </div>
+
+    <div class="list" id="list"></div>
+
+    <div class="foot">
+      <span id="updated"></span>
+      <button type="button" onclick="logout()">יציאה</button>
+    </div>
+  </div>
+</main>
+
+<script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwaLQ8yLOg7c4Uej48bDJVRuxUm8Lzquah6JRpjYImPIse3wdbhkVfiRIO7atgq3Hn0/exec';
+  const post = b => fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) }).then(r => r.json());
+  const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const store = { get(){ try { return sessionStorage.getItem('staffPin') || ''; } catch(e){ return ''; } },
+                  set(v){ try { v ? sessionStorage.setItem('staffPin', v) : sessionStorage.removeItem('staffPin'); } catch(e){} } };
+
+  let pin = store.get(), date = todayStr(), filter = 'all', data = [], timer = null;
+
+  function todayStr(){ const n = new Date(); return new Date(n.getTime() - n.getTimezoneOffset()*60000).toISOString().slice(0,10); }
+  function addDays(s, k){ const d = new Date(s + 'T12:00:00'); d.setDate(d.getDate() + k); return new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10); }
+  const DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+
+  document.getElementById('loginForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button'); btn.disabled = true; btn.textContent = 'בודק...';
+    document.getElementById('loginErr').textContent = '';
+    const ok = await load(document.getElementById('pin').value.trim());
+    btn.disabled = false; btn.textContent = 'כניסה';
+    if (!ok) document.getElementById('loginErr').textContent = 'סיסמה שגויה או שאין חיבור. נסו שוב.';
+  });
+
+  async function load(tryPin){
+    const p = tryPin || pin;
+    if (!p) return false;
+    try {
+      const r = await post({ action: 'staff', pin: p, date });
+      if (!r.ok) { if (r.error === 'pin') { pin = ''; store.set(''); showLogin(); } return false; }
+      pin = p; store.set(p);
+      data = r.list || [];
+      showBoard(); render();
+      document.getElementById('updated').textContent = 'עודכן ' + new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+      return true;
+    } catch (err) { return false; }
+  }
+
+  function render(){
+    const d = new Date(date + 'T12:00:00');
+    const t = todayStr();
+    document.getElementById('dayName').textContent = date === t ? 'היום' : date === addDays(t, 1) ? 'מחר' : date === addDays(t, -1) ? 'אתמול' : 'יום ' + DAYS[d.getDay()];
+    document.getElementById('dayDate').textContent = 'יום ' + DAYS[d.getDay()] + ' · ' + d.toLocaleDateString('he-IL');
+    document.getElementById('datePick').value = date;
+
+    const rows = data.filter(r => filter === 'all' || r.biz === filter);
+    const active = rows.filter(r => r.status !== 'בוטל');
+    document.getElementById('sumCount').textContent = active.length;
+    const onlyBarber = filter === 'barber';
+    document.getElementById('sumLabel').textContent = onlyBarber ? 'לקוחות' : 'סועדים';
+    document.getElementById('sumGuests').textContent = active.reduce((s, r) => s + (parseInt(r.guests, 10) || 1), 0);
+
+    const nowHM = new Date().toTimeString().slice(0,5);
+    document.getElementById('list').innerHTML = rows.length ? rows.map(r => {
+      const isBarber = r.biz === 'barber';
+      const past = date < t || (date === t && r.time < nowHM);
+      const cls = r.status === 'בוטל' ? 'cancel' : past ? 'past' : '';
+      return `<div class="bk ${cls}">
+        <div class="tm">${esc(r.time)}</div>
+        <div>
+          <div class="nm">${esc(r.name)}<span class="tag">${isBarber ? '✂️ מספרה' : '🍝 מסעדה'}</span>${r.status && r.status !== 'חדש' ? `<span class="tag">${esc(r.status)}</span>` : ''}</div>
+          <div class="meta">${isBarber ? '💈 ' + esc(r.barber || 'ללא העדפה') : '👥 ' + esc(r.guests) + ' סועדים'} · 📱 <a href="tel:${esc(String(r.phone).replace(/[^\d+]/g,''))}">${esc(r.phone)}</a></div>
+          ${r.notes ? `<div class="note">📝 ${esc(r.notes)}</div>` : ''}
+        </div>
+      </div>`;
+    }).join('') : '<div class="card empty">אין הזמנות ליום הזה</div>';
+  }
+
+  function setDate(s){ date = s; data = []; render(); load(); }
+  function shift(k){ setDate(addDays(date, k)); }
+  document.getElementById('datePick').addEventListener('change', e => e.target.value && setDate(e.target.value));
+  document.getElementById('chips').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    filter = b.dataset.f;
+    document.querySelectorAll('#chips button').forEach(x => x.classList.toggle('on', x === b));
+    render();
+  });
+
+  function showBoard(){
+    document.getElementById('loginCard').classList.add('hidden');
+    document.getElementById('board').classList.remove('hidden');
+    if (!timer) timer = setInterval(() => load(), 60000);
+  }
+  function showLogin(){
+    document.getElementById('board').classList.add('hidden');
+    document.getElementById('loginCard').classList.remove('hidden');
+    clearInterval(timer); timer = null;
+  }
+  function logout(){ pin = ''; store.set(''); document.getElementById('pin').value = ''; showLogin(); }
+
+  if (pin) load();
+</script>
+</body>
+</html>

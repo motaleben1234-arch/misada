@@ -275,12 +275,44 @@
   // כתובת השרת (Google Apps Script)
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwaLQ8yLOg7c4Uej48bDJVRuxUm8Lzquah6JRpjYImPIse3wdbhkVfiRIO7atgq3Hn0/exec';
 
+
+  const post = b => fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) }).then(r => r.json());
+
+  // ===== שעות תפוסות: שעה מלאה או שעה שעברה לא ניתנת לבחירה =====
+  let slotInfo = null;
+  const nowHM = () => { const n = new Date(); return String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0'); };
+  function applySlots(){
+    const isToday = dateInput.value === today, hm = nowHM();
+    let firstFree = null;
+    [...timeSel.options].forEach(o => {
+      const t = o.value.padStart(5, '0');
+      const s = slotInfo && slotInfo.slots[t];
+      const full = !!(s && s.count >= slotInfo.cap);
+      const past = isToday && t <= hm;
+      o.disabled = full || past;
+      o.textContent = o.value + (full ? ' – מלא' : past ? ' – עבר' : '');
+      if (!o.disabled && !firstFree) firstFree = o;
+    });
+    const cur = timeSel.options[timeSel.selectedIndex];
+    if ((!cur || cur.disabled) && firstFree) timeSel.value = firstFree.value;
+  }
+  async function loadSlots(){
+    slotInfo = null; applySlots();
+    const d = dateInput.value;
+    try { const r = await post({ action: 'slots', biz: 'restaurant', date: d }); if (r.ok && dateInput.value === d) { slotInfo = r; applySlots(); } } catch (e) {}
+  }
+  dateInput.addEventListener('change', loadSlots);
+  loadSlots();
+
   const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
   document.getElementById('bookingForm').addEventListener('submit', async e => {
     e.preventDefault();
     const btn = e.target.querySelector('button[type=submit]');
+    const opt = timeSel.options[timeSel.selectedIndex];
+    if (!opt || opt.disabled) { alert('אין שעה פנויה ביום הזה. בחרו יום אחר.'); return; }
     const b = {
+      biz: 'restaurant',
       name: document.getElementById('name').value.trim(),
       phone: document.getElementById('phone').value.trim(),
       date: dateInput.value,
@@ -290,11 +322,11 @@
     };
     btn.disabled = true; btn.textContent = 'שולח...';
     try {
-      const res = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) });
-      const r = await res.json();
+      const r = await post(b);
       if (!r.ok) throw new Error(r.error || 'error');
     } catch (err) {
-      alert('לא הצלחנו לשלוח את ההזמנה. נסו שוב בעוד רגע, או התקשרו למסעדה.');
+      if (String(err.message) === 'full') { alert('השעה הזו כבר מלאה. בחרו שעה אחרת 🙏'); loadSlots(); }
+      else alert('לא הצלחנו לשלוח את ההזמנה. נסו שוב בעוד רגע, או התקשרו למסעדה.');
       btn.disabled = false; btn.textContent = 'אישור הזמנה';
       return;
     }
@@ -306,6 +338,7 @@
     const msg = `✅ אישור הזמנה – טרטוריה בלה\n${b.name}\n📅 ${d} בשעה ${b.time}\n👥 ${b.guests} סועדים` + (b.notes ? `\n📝 ${b.notes}` : '') + `\nנתראה! 🍝`;
     document.getElementById('waBtn').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
     show('doneCard');
+    loadSlots();
   });
 
   // ציור התפריט
@@ -332,7 +365,7 @@
     window.scrollTo({top:0,behavior:'smooth'});
   }
 
-  function newBooking(){ document.getElementById('bookingForm').reset(); dateInput.value = today; guestSel.value = 2; show('formCard'); }
+  function newBooking(){ document.getElementById('bookingForm').reset(); dateInput.value = today; guestSel.value = 2; loadSlots(); show('formCard'); }
 
 </script>
 </body>

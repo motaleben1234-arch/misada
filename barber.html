@@ -174,7 +174,34 @@
   }
   const now = new Date(); const today = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().split('T')[0];
   dateInput.min = today; dateInput.value = today; fillTimes();
-  dateInput.addEventListener('change', fillTimes);
+
+  const post = b => fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) }).then(r => r.json());
+
+  // ===== שעות תפוסות: לפי הספר שנבחר; שעה שעברה לא ניתנת לבחירה =====
+  let slotInfo = null;
+  const nowHM = () => { const n = new Date(); return String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0'); };
+  function applySlots(){
+    if (!timeSel.options.length || !timeSel.options[0].value) return;
+    const isToday = dateInput.value === today, hm = nowHM(), barber = barberSel.value;
+    let firstFree = null;
+    [...timeSel.options].forEach(o => {
+      const s = slotInfo && slotInfo.slots[o.value];
+      const full = !!(s && (s.count >= slotInfo.cap || (barber !== 'ללא העדפה' && s.barbers.includes(barber))));
+      const past = isToday && o.value <= hm;
+      o.disabled = full || past;
+      o.textContent = o.value + (full ? ' – תפוס' : past ? ' – עבר' : '');
+      if (!o.disabled && !firstFree) firstFree = o;
+    });
+    const cur = timeSel.options[timeSel.selectedIndex];
+    if ((!cur || cur.disabled) && firstFree) timeSel.value = firstFree.value;
+  }
+  async function loadSlots(){
+    fillTimes(); slotInfo = null; applySlots();
+    const d = dateInput.value;
+    try { const r = await post({ action: 'slots', biz: 'barber', date: d }); if (r.ok && dateInput.value === d) { slotInfo = r; applySlots(); } } catch (e) {}
+  }
+  dateInput.addEventListener('change', loadSlots);
+  barberSel.addEventListener('change', applySlots);
 
   function show(id){
     ['formCard','doneCard'].forEach(c => document.getElementById(c).classList.toggle('hidden', c !== id));
@@ -192,24 +219,26 @@
 
   document.getElementById('bookingForm').addEventListener('submit', async e => {
     e.preventDefault();
-    if (!timeSel.value) { alert('המספרה סגורה ביום הזה. בחרו יום אחר.'); return; }
+    const opt = timeSel.options[timeSel.selectedIndex];
+    if (!timeSel.value || !opt || opt.disabled) { alert('אין תור פנוי ביום הזה. בחרו יום אחר או ספר אחר.'); return; }
     const btn = e.target.querySelector('button[type=submit]');
     const svc = SERVICES[document.querySelector('input[name=svc]:checked').value];
     const barber = barberSel.value;
     const extra = document.getElementById('notes').value.trim();
     const b = {
+      biz: 'barber', barber,
       name: document.getElementById('name').value.trim(),
       phone: document.getElementById('phone').value.trim(),
       date: dateInput.value, time: timeSel.value, guests: 1,
-      notes: `שירות: ${svc.name} | ספר: ${barber}` + (extra ? ` | ${extra}` : '')
+      notes: `שירות: ${svc.name}` + (extra ? ` | ${extra}` : '')
     };
     btn.disabled = true; btn.textContent = 'שולח...';
     try {
-      const res = await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) });
-      const r = await res.json();
+      const r = await post(b);
       if (!r.ok) throw new Error(r.error || 'error');
     } catch (err) {
-      alert('לא הצלחנו לקבוע את התור. נסו שוב בעוד רגע, או התקשרו למספרה.');
+      if (String(err.message) === 'full') { alert('התור הזה כבר נתפס. בחרו שעה אחרת 🙏'); loadSlots(); }
+      else alert('לא הצלחנו לקבוע את התור. נסו שוב בעוד רגע, או התקשרו למספרה.');
       btn.disabled = false; btn.textContent = 'אישור התור';
       return;
     }
@@ -221,9 +250,11 @@
     const msg = `✅ אישור תור – הספר של העיר\n${b.name}\n✂️ ${svc.name}\n💈 ספר: ${barber}\n📅 ${d} בשעה ${b.time}\nנתראה!`;
     document.getElementById('waBtn').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
     show('doneCard');
+    loadSlots();
   });
 
-  function newBooking(){ document.getElementById('bookingForm').reset(); dateInput.value = today; fillTimes(); show('formCard'); }
+  function newBooking(){ document.getElementById('bookingForm').reset(); dateInput.value = today; loadSlots(); show('formCard'); }
+  loadSlots();
 </script>
 </body>
 </html>
