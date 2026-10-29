@@ -263,7 +263,8 @@
     <h2 id="doneTitle">ההזמנה התקבלה!</h2>
     <p id="doneText">הסיר כבר על האש 🍲 נתראה בחמישי!</p>
     <div class="summary" id="summary"></div>
-    <a id="waBtn" class="wa-btn" target="_blank" rel="noopener">💬 שמור את האישור בוואטסאפ</a>
+    <p class="note" style="margin-top:14px">👇 כדי שנקבל את ההזמנה גם בוואטסאפ – לחצו ואז "שלח"</p>
+    <a id="waBtn" class="wa-btn" target="_blank" rel="noopener">💬 שלחו את ההזמנה למסעדה בוואטסאפ</a>
     <button type="button" class="btn" onclick="newBooking()">הזמנה נוספת</button>
   </div>
 
@@ -296,6 +297,7 @@
   ];
   const SLOT_FROM = 18, SLOT_TO = 24;   // שעות הזמנה: 18:00 עד 23:30
   const BIZ_NAME = "צ'ולנט ארוהיגיקייט";
+  const BIZ_WA = '972553125739';   // וואטסאפ של העסק – לשם הלקוח שולח את ההזמנה
 
   // ===== משלוחים – כאן משנים ערים, שעות ומה אפשר להזמין =====
   const DLV_CITIES = ['בני ברק', 'רמת גן', 'גבעתיים', 'פתח תקווה', 'קריית אונו', 'גבעת שמואל'];
@@ -419,8 +421,8 @@
     document.getElementById('doneText').textContent = 'הסיר כבר על האש 🍲 השליח בדרך אליכם בחמישי';
     document.getElementById('summary').innerHTML =
       `<b>${esc(b.name)}</b><br>🍲 ${esc(list.join(', '))}<br>📍 ${esc(addr)}<br>📅 חמישי ${d} · ${esc(win)}<br>📱 ${esc(b.phone)}` + (extra ? `<br>📝 ${esc(extra)}` : '');
-    const msg = `✅ אישור משלוח – ${BIZ_NAME}\n${b.name}\n🍲 ${list.join(', ')}\n📍 ${addr}\n📅 חמישי ${d} · ${win}\nבתיאבון! 🛵`;
-    document.getElementById('waBtn').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+    const msg = `שלום! הזמנתי עכשיו משלוח באתר 🛵\n👤 ${b.name} · ${b.phone}\n🍲 ${list.join(', ')}\n📍 ${addr}\n📅 חמישי ${d} · ${win}` + (extra ? `\n📝 ${extra}` : '');
+    document.getElementById('waBtn').href = 'https://wa.me/' + BIZ_WA + '?text=' + encodeURIComponent(msg);
     lastMode = 'dlv';
     ['formCard','dlvCard','menuCard'].forEach(c => document.getElementById(c).classList.add('hidden'));
     document.getElementById('doneCard').classList.remove('hidden');
@@ -469,8 +471,8 @@
     const d = new Date(b.date + 'T12:00:00').toLocaleDateString('he-IL');
     document.getElementById('summary').innerHTML =
       `<b>${esc(b.name)}</b><br>📅 חמישי ${d} בשעה ${b.time}<br>👥 ${b.guests} אנשים<br>📱 ${esc(b.phone)}` + (extra ? `<br>📝 ${esc(extra)}` : '');
-    const msg = `✅ אישור הזמנה – ${BIZ_NAME}\n${b.name}\n📅 חמישי ${d} בשעה ${b.time}\n👥 ${b.guests} אנשים\n📍 בר כוכבא 21, בני ברק\nנתראה! 🍲`;
-    document.getElementById('waBtn').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+    const msg = `שלום! הזמנתי עכשיו שולחן באתר 🍲\n👤 ${b.name} · ${b.phone}\n📅 חמישי ${d} בשעה ${b.time}\n👥 ${b.guests} אנשים` + (extra ? `\n📝 ${extra}` : '');
+    document.getElementById('waBtn').href = 'https://wa.me/' + BIZ_WA + '?text=' + encodeURIComponent(msg);
     show('doneCard');
     loadSlots();
   });
