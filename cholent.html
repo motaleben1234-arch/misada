@@ -83,9 +83,21 @@
   .promo p{font-size:1.05rem;font-weight:700}
   .promo p span{display:block;font-weight:400;font-size:.88rem;color:var(--cream2)}
 
-  .tabs{display:flex;gap:8px;background:rgba(10,42,30,.85);border:1px solid var(--line);border-radius:14px;padding:6px;margin-bottom:14px}
-  .tabs button{flex:1;padding:11px;border:0;border-radius:10px;background:none;color:var(--muted);font:inherit;font-weight:700;font-size:1rem;cursor:pointer}
-  .tabs button.active{background:linear-gradient(180deg,var(--gold2),var(--gold));color:var(--deep)}
+  .quick{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:14px auto 4px;position:relative;z-index:2}
+  .quick button{border:2px solid var(--gold2);background:linear-gradient(180deg,var(--gold2),var(--gold));color:var(--deep);font:inherit;font-weight:900;font-size:.86rem;padding:8px 11px;border-radius:30px;white-space:nowrap;cursor:pointer;box-shadow:0 5px 14px rgba(0,0,0,.45)}
+  .quick button:first-child{background:var(--red);color:#fff;border-color:var(--gold2)}
+  .tabs-h{text-align:center;color:var(--gold2);font-weight:900;font-size:1.25rem;margin:4px 0 10px;letter-spacing:.5px}
+  .tabs-h:before,.tabs-h:after{content:"";display:inline-block;width:34px;height:2px;background:var(--gold);vertical-align:middle;margin:0 10px;border-radius:2px}
+  .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+  .tabs button{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px 12px;border:2px solid var(--gold);border-radius:18px;background:linear-gradient(180deg,#fff8e6,#f1dfb3);color:var(--deep);font:inherit;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.35);transition:transform .15s,box-shadow .15s}
+  .tabs button:hover{transform:translateY(-2px)}
+  .tabs .ti{width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.9rem;background:radial-gradient(circle at 50% 35%,#1d5a40,#0a2a1e);border:2px solid var(--gold2);box-shadow:inset 0 0 0 3px rgba(255,255,255,.08)}
+  .tabs .tt{font-weight:900;font-size:1.08rem;line-height:1.1}
+  .tabs .ts{font-size:.74rem;color:#6b5a35;line-height:1.2}
+  .tabs button.active{background:linear-gradient(180deg,var(--gold2),var(--gold));border-color:#fff3c4;transform:translateY(-3px);box-shadow:0 10px 22px rgba(0,0,0,.45),0 0 0 3px rgba(243,205,110,.35)}
+  .tabs button.active .ts{color:#3d2f10}
+  .tabs button.active:after{content:"";position:absolute;bottom:-11px;left:50%;margin-left:-10px;border:10px solid transparent;border-top-color:var(--gold);border-bottom:0}
+  @media(max-width:360px){.tabs .ts{display:none}}
 
   .card{position:relative;background:linear-gradient(180deg,#fbf3de,var(--cream2));color:var(--ink);border-radius:18px;padding:26px 20px;border:2px solid var(--gold);box-shadow:0 0 0 4px var(--green),0 0 0 5px var(--line),0 20px 44px rgba(0,0,0,.45)}
   h2{font-family:'Suez One',serif;color:var(--green);text-align:center;font-size:1.7rem;margin-bottom:4px}
@@ -262,6 +274,11 @@
   </div>
   <div class="slogan-wrap"><div class="slogan">חמישי<br>בטעם של בית</div></div>
   <div class="tag">סיר חם. שולחן פתוח. אנשים טובים.</div>
+  <div class="quick">
+    <button type="button" onclick="go('menu')">📜 לתפריט</button>
+    <button type="button" onclick="go('book')">🍲 הזמנת שולחן</button>
+    <button type="button" onclick="go('dlv')">🛵 למשלוח</button>
+  </div>
   <div class="rule"></div>
 
   <div class="feats">
@@ -287,10 +304,11 @@
     <p>דיליל שישי 🍲<span>צ'ולנט חצי ליטר + לחמנייה + שתייה בפחית</span></p>
   </div>
 
+  <div class="tabs-h">מה תרצו להזמין?</div>
   <div class="tabs">
-    <button type="button" class="active" id="tabBook" onclick="tab('book')">🍲 שולחן</button>
-    <button type="button" id="tabDlv" onclick="tab('dlv')">🛵 משלוח</button>
-    <button type="button" id="tabMenu" onclick="tab('menu')">📜 תפריט</button>
+    <button type="button" class="active" id="tabBook" onclick="tab('book')"><span class="ti">🍲</span><span class="tt">שולחן</span><span class="ts">שמירת מקום לחמישי בערב</span></button>
+    <button type="button" id="tabDlv" onclick="tab('dlv')"><span class="ti">🛵</span><span class="tt">משלוח</span><span class="ts">חם עד הבית בבני ברק</span></button>
+    <button type="button" id="tabMenu" onclick="tab('menu')"><span class="ti">📜</span><span class="tt">תפריט</span><span class="ts">כל המנות והמחירים</span></button>
   </div>
 
   <!-- תפריט -->
@@ -598,6 +616,7 @@
   }
 
   function show(id){ ['formCard','doneCard'].forEach(c => document.getElementById(c).classList.toggle('hidden', c !== id)); window.scrollTo({top:0,behavior:'smooth'}); }
+  function go(t){ tab(t); document.querySelector('.tabs-h').scrollIntoView({behavior:'smooth',block:'start'}); }
   function tab(t){
     document.getElementById('tabBook').classList.toggle('active', t === 'book');
     document.getElementById('tabDlv').classList.toggle('active', t === 'dlv');
