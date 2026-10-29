@@ -278,7 +278,7 @@
 
 <footer>
   © צ'ולנט ארוהיגיקייט · בני ברק<br>
-  <a href="staff.html">🔒 כניסת צוות</a>
+  <a href="cholent-staff.html">🔒 כניסת צוות</a>
 </footer>
 
 <script>
@@ -306,7 +306,7 @@
     { name: 'קישקע', desc: 'מנה' }
   ];
 
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwaLQ8yLOg7c4Uej48bDJVRuxUm8Lzquah6JRpjYImPIse3wdbhkVfiRIO7atgq3Hn0/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzh_Nrxi6M4ADK4QEiE9FfLCvL9XWB1AJMRqLy_9ItjcWv81VjKRcnkLmDDoKbyMAC5/exec';
   const post = b => fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) }).then(r => r.json());
   const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -401,7 +401,7 @@
       phone: document.getElementById('dPhone').value.trim(),
       date: dDate.value, time: dTime.value,
       guests: qty.reduce((a, c) => a + c, 0),
-      notes: `[${BIZ_NAME}] 🛵 משלוח | ${list.join(', ')} | כתובת: ${addr}` + (extra ? ' | ' + extra : '')
+      notes: `🛵 ${list.join(', ')} | כתובת: ${addr}` + (extra ? ' | ' + extra : '')
     };
     btn.disabled = true; btn.textContent = 'שולח...';
     try {
@@ -450,7 +450,7 @@
       name: document.getElementById('name').value.trim(),
       phone: document.getElementById('phone').value.trim(),
       date: dateSel.value, time: timeSel.value, guests: guestSel.value,
-      notes: `[${BIZ_NAME}]` + (extra ? ' ' + extra : '')
+      notes: extra
     };
     btn.disabled = true; btn.textContent = 'שולח...';
     try {
