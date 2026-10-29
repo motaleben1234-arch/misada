@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>טרטוריה בלה – הזמנת שולחן</title>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&family=Frank+Ruhl+Libre:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Frank+Ruhl+Libre:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#faf6ef; --card:#ffffff; --ink:#2b2420; --muted:#7a6e66;
@@ -42,14 +42,85 @@
   th,td{border-bottom:1px solid var(--line);padding:8px 4px;text-align:right}
   th{color:var(--muted);font-weight:500}
   .empty{color:var(--muted);text-align:center;padding:20px}
+  .tabs{display:flex;gap:8px;background:var(--card);border-radius:14px;padding:6px;box-shadow:0 6px 24px rgba(0,0,0,.08);margin-bottom:16px}
+  .tabs button{margin:0;padding:10px;font-size:1rem;background:none;color:var(--muted);border-radius:10px}
+  .tabs button:hover{background:var(--bg);color:var(--ink)}
+  .tabs button.active{background:var(--accent);color:#fff}
+  .menu-cat{font-family:'Frank Ruhl Libre',serif;color:var(--accent);font-size:1.25rem;margin:22px 0 6px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+  .menu-cat:first-of-type{margin-top:0}
+  .dish{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line)}
+  .dish:last-child{border-bottom:0}
+  .dish h3{font-size:1rem;font-weight:700}
+  .dish p{color:var(--muted);font-size:.88rem;line-height:1.4}
+  .dish .price{font-weight:700;color:var(--green);white-space:nowrap}
+  .tag{display:inline-block;font-size:.72rem;background:#eaf2e6;color:var(--green);border-radius:6px;padding:0 6px;margin-inline-start:6px;vertical-align:middle}
+  .hero-btn{display:inline-block;width:auto;margin-top:18px;padding:12px 28px;background:#fff;color:var(--accent);border-radius:999px;font-weight:700;font-size:1.05rem;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+  .hero-btn:hover{background:#fdf0e6;color:var(--accent-dark)}
+  .tabs button{font-weight:700}
+  .picks{margin-top:16px;background:linear-gradient(135deg,#fff8ee,#fff);border:2px solid #e8c9a0}
+  .picks h2{margin-bottom:6px}
+  .pick{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line)}
+  .pick:last-of-type{border-bottom:0}
+  .pick b{color:var(--green)}
+  .picks button{background:var(--green)}
+  .picks button:hover{background:#2f5229}
+  .star{display:inline-block;font-size:.72rem;background:#fbe3d9;color:var(--accent);border-radius:6px;padding:0 6px;margin-inline-start:6px;vertical-align:middle}
+  header{position:relative}
+  .bsd{position:absolute;top:10px;right:14px;font-size:.85rem;opacity:.9;font-weight:500}
+  /* ===== עיצוב יוקרתי כהה ===== */
+  :root{--bg:#0e0c0a;--card:#17140f;--ink:#f3ead8;--muted:#a89a80;--accent:#c9a45c;--accent-dark:#a8843f;--green:#d9bb7a;--line:#3a3225;--gold:#c9a45c}
+  body{background:radial-gradient(ellipse at top,#1d1812 0%,#0e0c0a 60%) fixed;color:var(--ink);font-weight:300}
+  header{background:linear-gradient(180deg,#120f0b,#0e0c0a);color:var(--ink);padding:56px 16px 56px;border-bottom:1px solid var(--line)}
+  header::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:160px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+  header h1{font-weight:900;font-size:2.8rem;letter-spacing:3px;background:linear-gradient(180deg,#f3dfa8,#c9a45c 60%,#9c7a37);-webkit-background-clip:text;background-clip:text;color:transparent}
+  header p{color:var(--muted);letter-spacing:1px;font-size:.95rem}
+  .logo{filter:drop-shadow(0 0 18px rgba(201,164,92,.35))}
+  .flag span{height:1px;width:40px;background:var(--gold)!important}
+  .bsd{color:var(--gold)}
+  .hero-btn{background:transparent;color:var(--gold);border:1px solid var(--gold);box-shadow:none;letter-spacing:1px}
+  .hero-btn:hover{background:var(--gold);color:#0e0c0a}
+  main{margin-top:28px}
+  .card{background:linear-gradient(180deg,#1b1711,#141109);border:1px solid var(--line);box-shadow:0 20px 50px rgba(0,0,0,.5);position:relative}
+  .card::before{content:"";position:absolute;inset:6px;border:1px solid rgba(201,164,92,.12);border-radius:12px;pointer-events:none}
+  h2{font-family:'Frank Ruhl Libre',serif;font-weight:700;color:var(--gold);text-align:center;font-size:1.5rem;letter-spacing:1px}
+  h2::after{content:"✦";display:block;font-size:.7rem;color:var(--muted);margin-top:4px}
+  label{color:var(--muted);font-weight:400;letter-spacing:.5px}
+  input,select,textarea{background:#0f0d09;border:1px solid var(--line);color:var(--ink)}
+  input::placeholder,textarea::placeholder{color:#6b6150}
+  input[type=date]{color-scheme:dark}
+  input:focus,select:focus,textarea:focus{outline:1px solid var(--gold)}
+  button{background:linear-gradient(180deg,#d9b56c,#a8843f);color:#120f0b;letter-spacing:1px}
+  button:hover{background:linear-gradient(180deg,#e6c47e,#b8924a)}
+  .tabs{background:#141109;border:1px solid var(--line);box-shadow:none}
+  .tabs button{background:none;color:var(--muted);font-weight:500}
+  .tabs button:hover{background:#1f1a12;color:var(--ink)}
+  .tabs button.active{background:linear-gradient(180deg,#d9b56c,#a8843f);color:#120f0b}
+  .menu-cat{color:var(--gold);text-align:center;border-bottom:0;letter-spacing:2px;margin-top:30px}
+  .menu-cat::before,.menu-cat::after{content:" ─── ";color:var(--line)}
+  .dish{border-bottom:1px dotted var(--line)}
+  .dish h3{font-family:'Frank Ruhl Libre',serif;font-weight:500;font-size:1.08rem;color:var(--ink)}
+  .dish .price{color:var(--gold);font-family:'Frank Ruhl Libre',serif}
+  .tag{background:rgba(201,164,92,.1);color:var(--muted);border:1px solid var(--line)}
+  .star{background:rgba(201,164,92,.18);color:var(--gold)}
+  .picks{background:linear-gradient(180deg,#1f1a12,#141109);border:1px solid rgba(201,164,92,.4)}
+  .pick{border-bottom:1px dotted var(--line)}
+  .pick b{color:var(--gold);font-family:'Frank Ruhl Libre',serif}
+  .picks button{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+  .picks button:hover{background:var(--gold);color:#120f0b}
+  .done .check{background:transparent;border:2px solid var(--gold);color:var(--gold)}
+  .summary{background:#0f0d09;border:1px solid var(--line)}
+  .info div{background:#17140f;border:1px solid var(--line);box-shadow:none;color:var(--muted)}
+  .info b{color:var(--gold);font-family:'Frank Ruhl Libre',serif;font-size:1.05rem}
+  footer{color:#6b6150;letter-spacing:1px}
 </style>
 </head>
 <body>
 
 <header>
+  <div class="bsd">בס״ד</div>
   <svg class="logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-label="לוגו טרטוריה בלה">
-    <circle cx="60" cy="60" r="56" fill="#fdf6ec" stroke="#e8c9a0" stroke-width="4"/>
-    <circle cx="60" cy="60" r="46" fill="none" stroke="#a63d2a" stroke-width="2" stroke-dasharray="3 4"/>
+    <circle cx="60" cy="60" r="56" fill="#17140f" stroke="#c9a45c" stroke-width="2"/>
+    <circle cx="60" cy="60" r="46" fill="none" stroke="#c9a45c" stroke-width="1" stroke-dasharray="2 4"/>
     <!-- ענף זית שמאל -->
     <path d="M30 78 Q24 58 34 40" fill="none" stroke="#3f6b3a" stroke-width="2.5" stroke-linecap="round"/>
     <ellipse cx="27" cy="66" rx="3.5" ry="7" fill="#3f6b3a" transform="rotate(-25 27 66)"/>
@@ -61,7 +132,7 @@
     <ellipse cx="93" cy="53" rx="3.5" ry="7" fill="#5c8a52" transform="rotate(5 93 53)"/>
     <ellipse cx="88" cy="43" rx="3.5" ry="7" fill="#3f6b3a" transform="rotate(-20 88 43)"/>
     <!-- מזלג -->
-    <g fill="#a63d2a">
+    <g fill="#d9b56c">
       <rect x="57.5" y="52" width="5" height="34" rx="2.5"/>
       <path d="M50 30 v14 a10 10 0 0 0 20 0 v-14 h-3 v13 h-3 v-13 h-2.5 v13 h-3 v-13 h-2.5 v13 h-3 v-13 z"/>
     </g>
@@ -73,9 +144,21 @@
   <h1>טרטוריה בלה</h1>
   <p>מטבח איטלקי ביתי · פסטה טרייה · פיצה מתנור עצים</p>
   <div class="flag"><span style="background:#3f6b3a"></span><span style="background:#fff"></span><span style="background:#e0a090"></span></div>
+  <button type="button" class="hero-btn" onclick="tab('menu')">🍝 לתפריט המלא</button>
 </header>
 
 <main>
+  <div class="tabs">
+    <button type="button" class="active" id="tabBook" onclick="tab('book')">📅 הזמנת שולחן</button>
+    <button type="button" id="tabMenu" onclick="tab('menu')">🍕 התפריט שלנו</button>
+  </div>
+
+  <!-- תפריט -->
+  <div class="card hidden" id="menuCard">
+    <h2>התפריט</h2>
+    <div id="menuList"></div>
+    <button type="button" onclick="tab('book')">להזמנת שולחן</button>
+  </div>
   <!-- טופס הזמנה -->
   <div class="card" id="formCard">
     <h2>הזמנת שולחן</h2>
@@ -116,6 +199,13 @@
     <button onclick="newBooking()">הזמנה נוספת</button>
   </div>
 
+  <!-- מומלצי השף -->
+  <div class="card picks" id="picksCard">
+    <h2>⭐ מומלצי השף</h2>
+    <div id="picksList"></div>
+    <button type="button" onclick="tab('menu')">לכל התפריט</button>
+  </div>
+
   <div class="info">
     <div><b>שעות פתיחה</b>א׳–ה׳ 12:00–23:00<br>ו׳ 12:00–16:00</div>
     <div><b>כתובת</b>רחוב הדוגמה 1<br>תל אביב</div>
@@ -127,6 +217,34 @@
 </footer>
 
 <script>
+  // ===== התפריט – כאן משנים מנות ומחירים =====
+  const MENU = [
+    { cat: 'פתיחים', items: [
+      { name: 'פוקאצ׳ה הבית', chef: true, desc: 'מהתנור, עם שמן זית, רוזמרין ומלח גס', price: 28, veg: true },
+      { name: 'ברוסקטה עגבניות', desc: 'עגבניות שרי, בזיליקום ושום על לחם קלוי', price: 36, veg: true },
+      { name: 'קרפצ׳ו בקר', desc: 'פרוסות דקות, רוקט, פרמזן ולימון', price: 54 }
+    ]},
+    { cat: 'פסטה טרייה', items: [
+      { name: 'ספגטי פומודורו', desc: 'רוטב עגבניות ביתי ובזיליקום טרי', price: 58, veg: true },
+      { name: 'פטוצ׳יני פטריות', desc: 'פטריות יער, שמנת ופרמזן', price: 66, veg: true },
+      { name: 'ניוקי ברוטב רוזה', desc: 'ניוקי תפוחי אדמה, עגבניות ושמנת', price: 62, veg: true },
+      { name: 'לזניה בולונז', chef: true, desc: 'שכבות פסטה, בשר בקר ורוטב בשמל', price: 72 }
+    ]},
+    { cat: 'פיצה מתנור עצים', items: [
+      { name: 'מרגריטה', chef: true, desc: 'רוטב עגבניות, מוצרלה ובזיליקום', price: 56, veg: true },
+      { name: 'פיצה ארבע גבינות', desc: 'מוצרלה, גורגונזולה, פרמזן וריקוטה', price: 68, veg: true },
+      { name: 'פיצה ירקות', desc: 'פלפלים, בצל סגול, זיתים ופטריות', price: 64, veg: true }
+    ]},
+    { cat: 'קינוחים', items: [
+      { name: 'טירמיסו', chef: true, desc: 'מסקרפונה, אספרסו ובישקוטים', price: 38 },
+      { name: 'פנה קוטה', desc: 'עם רוטב פירות יער', price: 34 }
+    ]},
+    { cat: 'שתייה', items: [
+      { name: 'אספרסו / הפוך', desc: '', price: 12 },
+      { name: 'לימונדה ביתית', desc: 'עם נענע', price: 16 },
+      { name: 'כוס יין הבית', desc: 'אדום או לבן', price: 34 }
+    ]}
+  ];
   // שעות פנויות
   const timeSel = document.getElementById('time');
   for (let h = 12; h <= 22; h++) {
@@ -184,6 +302,30 @@
       (b.notes ? `<br>📝 ${esc(b.notes)}` : '');
     show('doneCard');
   });
+
+  // ציור התפריט
+  document.getElementById('menuList').innerHTML = MENU.map(c =>
+    `<div class="menu-cat">${esc(c.cat)}</div>` + c.items.map(i =>
+      `<div class="dish"><div><h3>${esc(i.name)}${i.chef ? '<span class="star">⭐ מומלץ</span>' : ''}${i.veg ? '<span class="tag">צמחוני</span>' : ''}</h3>` +
+      (i.desc ? `<p>${esc(i.desc)}</p>` : '') + `</div><div class="price">₪${i.price}</div></div>`
+    ).join('')
+  ).join('');
+
+  // מומלצי השף בעמוד הראשי
+  document.getElementById('picksList').innerHTML = MENU.flatMap(c => c.items).filter(i => i.chef)
+    .map(i => `<div class="pick"><span>${esc(i.name)}</span><b>₪${i.price}</b></div>`).join('');
+
+  // מעבר בין לשוניות
+  function tab(t){
+    const book = t === 'book';
+    document.getElementById('tabBook').classList.toggle('active', book);
+    document.getElementById('tabMenu').classList.toggle('active', !book);
+    document.getElementById('menuCard').classList.toggle('hidden', book);
+    document.getElementById('formCard').classList.toggle('hidden', !book || !document.getElementById('doneCard').classList.contains('hidden'));
+    if (!book) document.getElementById('doneCard').classList.add('hidden');
+    document.getElementById('picksCard').classList.toggle('hidden', !book);
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
 
   function newBooking(){ document.getElementById('bookingForm').reset(); dateInput.value = today; guestSel.value = 2; show('formCard'); }
 
