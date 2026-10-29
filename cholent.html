@@ -143,7 +143,8 @@
   .mcard .ds{font-size:.75rem;color:#7a6a52;padding:2px 6px 0}
   .cart-bar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,var(--green2),var(--deep));border-top:2px solid var(--gold);box-shadow:0 -6px 18px rgba(0,0,0,.35);color:var(--cream)}
   .cart-bar[hidden]{display:none}
-  .cart-bar .cb-tx{font-size:1rem}
+  .cart-bar .cb-tx{font-size:.95rem;white-space:nowrap}
+  .cart-bar .cb-tx small{display:block;font-size:.78rem;color:var(--gold2);opacity:.9}
   .cart-bar .cb-tx b{color:var(--gold2);font-size:1.12rem}
   .cart-bar button{border:0;border-radius:12px;padding:10px 14px;font:inherit;font-weight:800;background:linear-gradient(180deg,var(--gold2),var(--gold));color:var(--deep);cursor:pointer;white-space:nowrap}
   body.has-cart{padding-bottom:76px}
@@ -163,6 +164,10 @@
   .deal .big{font-family:'Suez One',serif;font-size:2.2rem;color:var(--gold2);line-height:1.1}
   .dlv-item .pr{font-family:'Suez One',serif;color:var(--red);white-space:nowrap;margin-inline-start:4px}
   .dlv-total{display:flex;justify-content:space-between;font-weight:800;color:var(--green);padding:12px 2px 0;font-size:1.05rem}
+  .dlv-line{display:flex;justify-content:space-between;color:#5a4a30;padding:6px 2px 0}
+  .dlv-free{background:#fff3d6;border:1px dashed var(--gold);border-radius:10px;padding:6px 10px;margin:8px 0 0;font-size:.88rem;color:#6b4e12;text-align:center}
+  .dlv-free.ok{background:#e6f4ea;border-color:#3f9a5f;color:#1e6b3a;font-weight:700}
+  .dlv-total.grand{border-top:2px solid var(--gold);margin-top:8px;padding-top:10px;font-size:1.2rem;color:var(--red)}
   .dlv-total small{display:block;font-weight:400;font-size:.78rem;color:#7a6a52}
   .note{font-size:.85rem;color:#7a6a52;text-align:center;margin-top:12px}
 
@@ -369,11 +374,14 @@
   <div class="card hidden" id="dlvCard">
     <h2>משלוח הביתה</h2>
     <div class="h2orn"><i></i><b></b><i></i></div>
-    <p class="area">🛵 משלוחים בבני ברק והסביבה · בימי חמישי</p>
+    <p class="area">🛵 משלוחים בבני ברק והסביבה · בימי חמישי עד 23:00<br>🎁 משלוח חינם מעל 250 ₪ · מתחת ל־250 ₪ – 25 ₪</p>
     <form id="dlvForm">
       <label>מה להביא לכם?</label>
       <div id="dlvItems"></div>
-      <div class="dlv-total"><span>סה״כ<small>לפני דמי משלוח, אם יש</small></span><span id="dlvSum">0 ₪</span></div>
+      <div class="dlv-total"><span>סכום המנות</span><span id="dlvSum">0 ₪</span></div>
+      <div class="dlv-line"><span>🛵 משלוח</span><span id="dlvFee">25 ₪</span></div>
+      <div class="dlv-free" id="dlvFree">משלוח חינם בהזמנה מעל 250 ₪</div>
+      <div class="dlv-total grand"><span>סה״כ לתשלום</span><span id="dlvGrand">0 ₪</span></div>
 
       <label for="dName">שם מלא</label>
       <input id="dName" required placeholder="לדוגמה: יענקי כהן">
@@ -562,12 +570,22 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
       html += cardHtml(it, k);
     });
     document.getElementById('dlvItems').innerHTML = html + (open ? '</div>' : '');
-    document.getElementById('dlvSum').textContent = dlvSum() + ' ₪';
+    updTotals();
     if (typeof updCart === 'function') updCart();
   }
   const dlvSum = () => DLV_ITEMS.reduce((a, it, k) => a + qty[k] * it.price, 0);
-  function updCart(){ const n = qty.reduce((a,b)=>a+b,0), show = n > 0 && !document.getElementById('dlvCard').classList.contains('hidden'); const b = document.getElementById('cartBar'); if (!b) return; b.hidden = !show; document.body.classList.toggle('has-cart', show); document.getElementById('cbCount').textContent = n; document.getElementById('cbSum').textContent = dlvSum() + ' ₪'; }
-  function chg(k, n){ qty[k] = Math.max(0, Math.min(30, qty[k] + n)); const e = document.getElementById('dq' + k); if (!e) return drawItems(); e.textContent = qty[k]; document.getElementById('dc' + k).classList.toggle('sel', qty[k] > 0); document.getElementById('dlvSum').textContent = dlvSum() + ' ₪'; updCart(); }
+  const FREE_FROM = 250, DLV_FEE = 25;   // משלוח חינם מעל 250 ₪, אחרת 25 ₪
+  const feeOf = sub => (sub === 0 || sub >= FREE_FROM) ? 0 : DLV_FEE;
+  function updTotals(){
+    const sub = dlvSum(), fee = feeOf(sub), f = document.getElementById('dlvFree');
+    document.getElementById('dlvSum').textContent = sub + ' ₪';
+    document.getElementById('dlvFee').textContent = sub === 0 ? '25 ₪' : (fee ? fee + ' ₪' : 'חינם 🎉');
+    document.getElementById('dlvGrand').textContent = (sub + fee) + ' ₪';
+    f.classList.toggle('ok', sub >= FREE_FROM);
+    f.textContent = sub >= FREE_FROM ? '🎉 יש לכם משלוח חינם!' : (sub ? `עוד ${FREE_FROM - sub} ₪ ויש משלוח חינם` : 'משלוח חינם בהזמנה מעל 250 ₪');
+  }
+  function updCart(){ const n = qty.reduce((a,b)=>a+b,0), show = n > 0 && !document.getElementById('dlvCard').classList.contains('hidden'); const b = document.getElementById('cartBar'); if (!b) return; b.hidden = !show; document.body.classList.toggle('has-cart', show); document.getElementById('cbCount').textContent = n; const sub = dlvSum(), fee = feeOf(sub); document.getElementById('cbSum').textContent = (sub + fee) + ' ₪'; document.getElementById('cbHint').textContent = sub >= FREE_FROM ? '🎉 משלוח חינם' : `עוד ${FREE_FROM - sub} ₪ למשלוח חינם`; }
+  function chg(k, n){ qty[k] = Math.max(0, Math.min(30, qty[k] + n)); const e = document.getElementById('dq' + k); if (!e) return drawItems(); e.textContent = qty[k]; document.getElementById('dc' + k).classList.toggle('sel', qty[k] > 0); updTotals(); updCart(); }
   drawItems();
   DLV_CITIES.forEach(c => dCity.add(new Option(c, c)));
   [...dateSel.options].forEach(o => { if (o.value === today && DLV_WINDOWS[DLV_WINDOWS.length - 1] <= nowHM()) return; dDate.add(new Option(o.text, o.value)); });
@@ -588,8 +606,9 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
   document.getElementById('dlvForm').addEventListener('submit', async e => {
     e.preventDefault();
     const list = DLV_ITEMS.map((it, k) => qty[k] ? `${qty[k]} × ${it.short || it.name}` : '').filter(Boolean);
-    const sum = dlvSum();
+    const sub = dlvSum(), fee = feeOf(sub), sum = sub + fee;
     if (!list.length) { alert('בחרו לפחות מנה אחת 🍲'); return; }
+    list.push(fee ? `משלוח ${fee} ₪` : 'משלוח חינם');
     const opt = dTime.options[dTime.selectedIndex];
     if (!opt || opt.disabled) { alert('המשלוחים להיום כבר נגמרו. בחרו חמישי אחר.'); return; }
     const btn = e.target.querySelector('button[type=submit]');
@@ -701,8 +720,8 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
   }
 </script>
 <div id="cartBar" class="cart-bar" hidden>
-  <div class="cb-tx">🛒 <b id="cbCount">0</b> פריטים · סה״כ <b id="cbSum">0 ₪</b></div>
-  <button type="button" onclick="document.querySelector('.dlv-total').scrollIntoView({behavior:'smooth',block:'start'})">להמשך ההזמנה ⬇</button>
+  <div class="cb-tx">🛒 <b id="cbCount">0</b> פריטים · סה״כ <b id="cbSum">0 ₪</b><small id="cbHint"></small></div>
+  <button type="button" onclick="document.querySelector('.dlv-total').scrollIntoView({behavior:'smooth',block:'start'})">להמשך ⬇</button>
 </div>
 </body>
 </html>
