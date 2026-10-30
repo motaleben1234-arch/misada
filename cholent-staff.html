@@ -58,6 +58,18 @@
   .empty{text-align:center;color:var(--muted);padding:30px 10px}
   .foot{display:flex;justify-content:space-between;color:#6b6150;font-size:.8rem;margin-top:18px}
   .foot button{background:none;border:0;color:var(--muted);text-decoration:underline;font:inherit;cursor:pointer}
+  .rv-box{margin-top:16px}
+  .rv-box h3{margin:0 0 4px;color:var(--gold);font-size:1.15rem}
+  .rv-help{margin:0 0 10px;color:var(--muted);font-size:.85rem}
+  .rv-pend{background:#b8322a;color:#fff;border-radius:999px;padding:1px 9px;font-size:.85rem;margin-right:6px}
+  .rv{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px;background:#141109}
+  .rv.ok{border-color:#3f9a5f}
+  .rv.no{opacity:.55}
+  .rv .tx{font-size:1rem;line-height:1.45}
+  .rv .by{color:var(--muted);font-size:.85rem;margin-top:4px}
+  .rv .st{font-size:.8rem;border-radius:999px;padding:1px 8px;margin-right:6px;background:#3a3222;color:var(--gold)}
+  .rv.ok .st{background:#1e6b3a;color:#fff}
+  .rv .acts{margin-top:8px}
 </style>
 </head>
 <body>
@@ -104,6 +116,12 @@
 
     <div class="list" id="list"></div>
 
+    <div class="card rv-box">
+      <h3>💬 מילים חמות מלקוחות <span id="rvPend" class="rv-pend"></span></h3>
+      <p class="rv-help">הודעה מופיעה באתר רק אחרי שלוחצים "אשר".</p>
+      <div id="rvList"></div>
+    </div>
+
     <div class="foot">
       <span id="updated"></span>
       <button type="button" onclick="logout()">יציאה</button>
@@ -142,6 +160,7 @@
       pin = p; store.set(p);
       data = r.list || [];
       showBoard(); render();
+      loadRevs();
       document.getElementById('updated').textContent = 'עודכן ' + new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
       return true;
     } catch (err) { return false; }
@@ -191,6 +210,34 @@
       else r.status = status;
     } catch (e) { alert('אין חיבור. נסו שוב.'); }
     render(); load();
+  }
+
+  let revs = [];
+  async function loadRevs(){
+    try { const r = await post({ action: 'reviewsStaff', pin }); if (r.ok) { revs = r.list || []; drawRevs(); } } catch (e) {}
+  }
+  function drawRevs(){
+    const pend = revs.filter(r => r.status === 'ממתין').length;
+    document.getElementById('rvPend').textContent = pend ? pend + ' ממתינות' : '';
+    document.getElementById('rvPend').hidden = !pend;
+    document.getElementById('rvList').innerHTML = revs.length ? revs.map(r => {
+      const cls = r.status === 'מאושר' ? 'ok' : r.status === 'נדחה' ? 'no' : '';
+      const btns = r.status === 'ממתין'
+        ? `<button type="button" class="ok" onclick="revMark(${r.row}, 'מאושר', this)">👍 אשר – יופיע באתר</button><button type="button" class="no" onclick="revMark(${r.row}, 'נדחה', this)">🚫 לא לפרסם</button>`
+        : r.status === 'מאושר'
+          ? `<button type="button" class="no" onclick="revMark(${r.row}, 'נדחה', this)">🙈 הסר מהאתר</button>`
+          : `<button type="button" onclick="revMark(${r.row}, 'מאושר', this)">↩️ אשר בכל זאת</button>`;
+      return `<div class="rv ${cls}"><div class="tx">"${esc(r.text)}"</div><div class="by">– ${esc(r.name)} <span class="st">${esc(r.status === 'מאושר' ? '✅ באתר' : r.status === 'נדחה' ? 'לא מפורסם' : '⏳ ממתין לאישור')}</span></div><div class="acts">${btns}</div></div>`;
+    }).join('') : '<div class="rv-help">עוד לא התקבלו הודעות.</div>';
+  }
+  async function revMark(row, status, btn){
+    const r = revs.find(x => x.row === row); if (!r) return;
+    btn.disabled = true;
+    try {
+      const res = await post({ action: 'reviewStatus', pin, row, status, name: r.name });
+      if (!res.ok) alert('לא הצלחנו לעדכן. נסו שוב.'); else r.status = status;
+    } catch (e) { alert('אין חיבור. נסו שוב.'); }
+    drawRevs();
   }
 
   function setDate(s){ date = s; data = []; render(); load(); }

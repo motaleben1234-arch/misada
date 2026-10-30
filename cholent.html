@@ -106,6 +106,15 @@
   input,select,textarea{width:100%;padding:12px;border:1.5px solid #d8c89f;border-radius:10px;font:inherit;background:#fffaf0;color:var(--ink)}
   input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);border-color:transparent}
   .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .rev-card{margin-top:18px}
+  .rev-list{display:flex;flex-direction:column;gap:10px;margin:6px 0 4px}
+  .rev{position:relative;background:#fffaf0;border:1px solid var(--gold);border-radius:14px;padding:12px 14px 10px;box-shadow:0 3px 10px rgba(15,58,42,.12)}
+  .rev:before{content:"\201D";position:absolute;top:-6px;right:10px;font-family:Georgia,serif;font-size:2.6rem;color:var(--gold);line-height:1}
+  .rev p{margin:0 0 6px;padding-right:18px;font-size:1rem;line-height:1.45}
+  .rev b{display:block;text-align:left;color:var(--red);font-size:.9rem}
+  .rev-empty{text-align:center;color:#7a6a52;margin:6px 0}
+  .rev-msg{text-align:center;font-weight:700;color:var(--green);margin-top:14px}
+  #revForm textarea{width:100%;resize:vertical}
   .btn{width:100%;margin-top:20px;padding:15px;border:0;border-radius:12px;background:linear-gradient(180deg,var(--green2),var(--green));color:var(--gold2);font:inherit;font-weight:800;font-size:1.1rem;cursor:pointer;box-shadow:0 4px 0 var(--deep)}
   .btn:disabled{opacity:.6;cursor:wait}
   .hidden{display:none!important}
@@ -428,6 +437,22 @@
     <button type="button" class="btn" onclick="newBooking()">הזמנה נוספת</button>
   </div>
 
+  <!-- מילים חמות -->
+  <div class="card rev-card" id="revCard">
+    <h2>💬 מה הלקוחות אומרים</h2>
+    <div class="h2orn"><i></i><b></b><i></i></div>
+    <div id="revList" class="rev-list"><p class="rev-empty">עוד אין כאן מילים חמות – תהיו הראשונים! 🙂</p></div>
+    <button type="button" class="btn rev-open" id="revOpen" onclick="document.getElementById('revForm').hidden=false;this.hidden=true">✍️ כתבו לנו מילה טובה</button>
+    <form id="revForm" hidden>
+      <label for="rName">השם שלכם</label>
+      <input id="rName" required maxlength="40" placeholder="לדוגמה: יענקי מבני ברק">
+      <label for="rText">מה רציתם לכתוב?</label>
+      <textarea id="rText" required maxlength="400" rows="3" placeholder="לדוגמה: הצ'ולנט הכי טעים בעיר!"></textarea>
+      <button type="submit" class="btn">שליחה</button>
+    </form>
+    <p class="rev-msg" id="revMsg" hidden>🙏 תודה רבה! ההודעה נשלחה ותופיע באתר אחרי אישור.</p>
+  </div>
+
   <!-- מפה וניווט -->
   <div class="map-card">
     <div class="map-head"><svg style="color:var(--gold2)"><use href="#i-pin"/></svg><span><b>איך מגיעים?</b>בר כוכבא 21, בני ברק</span></div>
@@ -492,6 +517,24 @@
 
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzh_Nrxi6M4ADK4QEiE9FfLCvL9XWB1AJMRqLy_9ItjcWv81VjKRcnkLmDDoKbyMAC5/exec';
   const post = b => fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) }).then(r => r.json());
+
+  // ===== מילים חמות =====
+  function drawRevs(list){
+    const el = document.getElementById('revList');
+    if (!list || !list.length) return;
+    el.innerHTML = list.map(r => `<div class="rev"><p>${esc(r.text)}</p><b>– ${esc(r.name)}</b></div>`).join('');
+  }
+  post({ action: 'reviews' }).then(r => { if (r && r.ok) drawRevs(r.list); }).catch(() => {});
+  document.getElementById('revForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type=submit]');
+    btn.disabled = true; btn.textContent = 'שולח...';
+    try {
+      const r = await post({ action: 'review', name: document.getElementById('rName').value.trim(), text: document.getElementById('rText').value.trim() });
+      if (!r.ok) throw 0;
+      e.target.hidden = true; document.getElementById('revMsg').hidden = false;
+    } catch (err) { alert('משהו השתבש, נסו שוב בעוד רגע'); btn.disabled = false; btn.textContent = 'שליחה'; }
+  });
   const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
   // תפריט
