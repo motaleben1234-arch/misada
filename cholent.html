@@ -133,6 +133,25 @@
   @keyframes stin{from{opacity:0;transform:scale(.85) translateY(14px)}to{opacity:1;transform:none}}
   .st-foot{position:absolute;bottom:16px;right:14px;left:14px;z-index:3;display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;font-size:.85rem;opacity:.9}
   .st-foot span{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:99px;padding:6px 14px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+  .skip{position:absolute;right:12px;top:-80px;background:#fff;color:#000;padding:8px 14px;border-radius:8px;z-index:200;font-weight:700}
+  .skip:focus{top:12px}
+  a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:3px solid #ffbf00;outline-offset:2px}
+  .consent{font-size:.82rem;color:#5a4a34;text-align:center;margin:8px 0 0}
+  .consent a{color:#7a4f00}
+  .a11y-btn{position:fixed;left:12px;bottom:84px;z-index:150;width:48px;height:48px;border-radius:50%;border:2px solid #fff;background:#1d4ed8;color:#fff;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+  .a11y-panel{position:fixed;left:12px;bottom:140px;z-index:150;background:#fff;color:#111;border-radius:14px;padding:12px;width:230px;box-shadow:0 8px 28px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:6px}
+  .a11y-panel[hidden]{display:none}
+  .a11y-panel h2{margin:0 0 4px;font-size:1rem;color:#111;font-family:'Heebo',sans-serif}
+  .a11y-panel button{font:inherit;font-size:.95rem;text-align:right;padding:9px 10px;border-radius:9px;border:1px solid #bbb;background:#f4f4f4;color:#111;cursor:pointer}
+  .a11y-panel button[aria-pressed="true"]{background:#1d4ed8;color:#fff;border-color:#1d4ed8}
+  .a11y-panel a{font-size:.9rem;color:#1d4ed8}
+  html.a11y-big{font-size:125%}
+  html.a11y-contrast body{filter:contrast(1.35)}
+  html.a11y-contrast .card,html.a11y-contrast .card *{color:#000!important}
+  html.a11y-links a{text-decoration:underline!important;outline:2px dashed #ffbf00}
+  html.a11y-still *,html.a11y-still *::before,html.a11y-still *::after{animation:none!important;transition:none!important}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition:none!important}}
+  .st-tap{background:none;border:0;padding:0}
   .st-tap{position:absolute;top:0;bottom:0;width:40%;z-index:4;cursor:pointer}
   .st-tap.r{right:0}.st-tap.l{left:0}
   .rev-empty{text-align:center;color:#cfe0d6;margin:10px 0;padding:18px;border:1px dashed rgba(243,213,138,.4);border-radius:16px}
@@ -224,6 +243,7 @@
 </style>
 </head>
 <body>
+<a class="skip" href="#content">דלג לתוכן</a>
 
 <svg width="0" height="0" style="position:absolute">
   <defs>
@@ -328,9 +348,9 @@
   <div class="tag">סיר חם. שולחן פתוח. אנשים טובים.</div>
   <div class="tabs-h top">מה תרצו להזמין?</div>
   <div class="tabs">
-    <button type="button" class="active" id="tabBook" onclick="go('book')"><span class="ti">🍲</span><span class="tt">שולחן</span><span class="ts">שמירת מקום לחמישי בערב</span></button>
-    <button type="button" id="tabMenu" onclick="go('menu')"><span class="ti">📜</span><span class="tt">תפריט</span><span class="ts">כל המנות והמחירים</span></button>
-    <button type="button" id="tabDlv" onclick="go('dlv')"><span class="ti">🛵</span><span class="tt">משלוח</span><span class="ts">עד הבית · עד 23:00 בלילה</span></button>
+    <button type="button" class="active" id="tabBook" onclick="go('book')"><span class="ti" aria-hidden="true">🍲</span><span class="tt">שולחן</span><span class="ts">שמירת מקום לחמישי בערב</span></button>
+    <button type="button" id="tabMenu" onclick="go('menu')"><span class="ti" aria-hidden="true">📜</span><span class="tt">תפריט</span><span class="ts">כל המנות והמחירים</span></button>
+    <button type="button" id="tabDlv" onclick="go('dlv')"><span class="ti" aria-hidden="true">🛵</span><span class="tt">משלוח</span><span class="ts">עד הבית · עד 23:00 בלילה</span></button>
   </div>
   <div class="rule"></div>
 
@@ -352,7 +372,7 @@
   <a class="ig-btn" href="https://www.instagram.com/ruhigkeit.cholent/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="#fff" stroke="none"/></svg>עקבו אחרינו באינסטגרם</a>
 </header>
 
-<main>
+<main id="content" tabindex="-1">
 
 
   <!-- תפריט -->
@@ -401,6 +421,7 @@
       <textarea id="notes" rows="2" placeholder="שולחן לחבר'ה, יום הולדת, מקום ליד הנגן..."></textarea>
 
       <button type="submit" class="btn">אישור הזמנה</button>
+      <p class="consent">בשליחה אתם מסכימים ל<a href="cholent-privacy.html">מדיניות הפרטיות</a></p>
     </form>
   </div>
 
@@ -444,6 +465,7 @@
       <textarea id="dNotes" rows="2" placeholder="קוד לבניין, להתקשר כשמגיעים..."></textarea>
 
       <button type="submit" class="btn">הזמנת משלוח</button>
+      <p class="consent">בשליחה אתם מסכימים ל<a href="cholent-privacy.html">מדיניות הפרטיות</a></p>
     </form>
   </div>
 
@@ -474,8 +496,9 @@
       <label for="rText">מה רציתם לכתוב?</label>
       <textarea id="rText" required maxlength="400" rows="3" placeholder="לדוגמה: הצ'ולנט הכי טעים בעיר!"></textarea>
       <button type="submit" class="btn">שליחה</button>
+      <p class="consent">השם והטקסט יופיעו באתר אחרי אישור · <a href="cholent-privacy.html">מדיניות הפרטיות</a></p>
     </form>
-    <p class="rev-msg" id="revMsg" hidden>🙏 תודה רבה! ההודעה נשלחה ותופיע באתר אחרי אישור.</p>
+    <p class="rev-msg" id="revMsg" role="status" hidden>🙏 תודה רבה! ההודעה נשלחה ותופיע באתר אחרי אישור.</p>
   </div>
 
   <!-- מפה וניווט -->
@@ -500,8 +523,19 @@
 
 <footer>
   © צ'ולנט ארוהיגיקייט · בני ברק<br>
-  <a href="cholent-staff.html">🔒 כניסת צוות</a>
+  <a href="cholent-accessibility.html">הצהרת נגישות</a> · <a href="cholent-privacy.html">מדיניות פרטיות</a> · <a href="cholent-staff.html">כניסת צוות</a>
 </footer>
+
+<button type="button" class="a11y-btn" id="a11yBtn" aria-label="תפריט נגישות" aria-expanded="false" aria-controls="a11yPanel" onclick="a11yToggle()">♿</button>
+<div class="a11y-panel" id="a11yPanel" role="dialog" aria-label="תפריט נגישות" hidden>
+  <h2>נגישות</h2>
+  <button type="button" data-a11y="big" aria-pressed="false">הגדלת טקסט</button>
+  <button type="button" data-a11y="contrast" aria-pressed="false">ניגודיות גבוהה</button>
+  <button type="button" data-a11y="links" aria-pressed="false">הדגשת קישורים</button>
+  <button type="button" data-a11y="still" aria-pressed="false">עצירת אנימציות</button>
+  <button type="button" onclick="a11yReset()">איפוס</button>
+  <a href="cholent-accessibility.html">הצהרת נגישות</a>
+</div>
 
 <script>
   // ===== התפריט – כאן משנים מנות ומחירים =====
@@ -558,7 +592,7 @@
       <div class="st-head"><span class="st-av"><b id="stAv"></b></span><span><strong id="stName"></strong><small>מילה חמה · צ'ולנט ארוהיגיקייט</small></span></div>
       <div class="st-body" id="stBody"></div>
       <div class="st-foot"><span>❤️ תודה שאתם איתנו</span></div>
-      <div class="st-tap r" onclick="revGo(revI-1)"></div><div class="st-tap l" onclick="revGo(revI+1)"></div>`;
+      <button type="button" class="st-tap r" onclick="revGo(revI-1)" aria-label="ההודעה הקודמת"></button><button type="button" class="st-tap l" onclick="revGo(revI+1)" aria-label="ההודעה הבאה"></button>`;
     const hold = on => { el.classList.toggle('paused', on); if (on) { clearTimeout(revT); revLeft -= Date.now() - revStart; } else { revStart = Date.now(); revT = setTimeout(() => revGo(revI + 1), Math.max(300, revLeft)); } };
     el.addEventListener('pointerdown', () => hold(true));
     ['pointerup', 'pointerleave', 'pointercancel'].forEach(t => el.addEventListener(t, () => el.classList.contains('paused') && hold(false)));
@@ -576,7 +610,7 @@
     document.querySelectorAll('#revList .st-bars span').forEach((b, j) => { b.className = j < revI ? 'done' : ''; });
     const cur = document.querySelectorAll('#revList .st-bars span')[revI]; void cur.offsetWidth; cur.className = 'cur';
     clearTimeout(revT); revLeft = 5000; revStart = Date.now();
-    revT = setTimeout(() => revGo(revI + 1), 5000);
+    if (!stillMode()) revT = setTimeout(() => revGo(revI + 1), 5000);
   }
   post({ action: 'reviews' }).then(r => { if (r && r.ok) drawRevs(r.list); }).catch(() => {});
   document.getElementById('revForm').addEventListener('submit', async e => {
@@ -821,5 +855,16 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
   <div class="cb-tx">🛒 <b id="cbCount">0</b> פריטים · סה״כ <b id="cbSum">0 ₪</b><small id="cbHint"></small></div>
   <button type="button" onclick="document.querySelector('.dlv-total').scrollIntoView({behavior:'smooth',block:'start'})">להמשך ⬇</button>
 </div>
+<script>
+  function stillMode(){ return document.documentElement.classList.contains('a11y-still') || matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  function a11yToggle(){ const p=document.getElementById('a11yPanel'), b=document.getElementById('a11yBtn'); p.hidden=!p.hidden; b.setAttribute('aria-expanded', String(!p.hidden)); if(!p.hidden) p.querySelector('button').focus(); }
+  function a11ySave(){ try{ localStorage.setItem('a11y', [...document.documentElement.classList].filter(c=>c.startsWith('a11y-')).join(' ')); }catch(e){} }
+  function a11ySync(){ document.querySelectorAll('[data-a11y]').forEach(b=>b.setAttribute('aria-pressed', String(document.documentElement.classList.contains('a11y-'+b.dataset.a11y)))); }
+  function a11yReset(){ ['big','contrast','links','still'].forEach(k=>document.documentElement.classList.remove('a11y-'+k)); a11ySync(); a11ySave(); if (typeof revGo==='function' && typeof revs!=='undefined' && revs.length) revGo(revI); }
+  document.querySelectorAll('[data-a11y]').forEach(b=>b.addEventListener('click',()=>{ document.documentElement.classList.toggle('a11y-'+b.dataset.a11y); a11ySync(); a11ySave(); if (b.dataset.a11y==='still' && typeof revGo==='function' && typeof revs!=='undefined' && revs.length){ clearTimeout(revT); if(!stillMode()) revGo(revI); } }));
+  try{ (localStorage.getItem('a11y')||'').split(' ').filter(Boolean).forEach(c=>document.documentElement.classList.add(c)); }catch(e){}
+  a11ySync();
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ const p=document.getElementById('a11yPanel'); if(!p.hidden){ a11yToggle(); document.getElementById('a11yBtn').focus(); } } });
+</script>
 </body>
 </html>
