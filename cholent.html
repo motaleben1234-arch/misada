@@ -45,6 +45,8 @@
   .label .curl.r{right:calc(50% + 40px)}
   .label .curl.l{left:calc(50% + 40px);transform:scaleX(-1)}
   .label h1{font-family:'Suez One',serif;font-size:4.2rem;line-height:.95;letter-spacing:1px;color:var(--green);text-shadow:0 2px 0 rgba(0,0,0,.08)}
+  .label .sub-a{font-family:'Suez One',serif;font-size:1.2rem;line-height:1;color:var(--red);margin-top:2px}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .label .sub{font-family:'Suez One',serif;font-size:1.45rem;color:var(--ink);margin-top:4px}
   .orn{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px}
   .orn i{display:block;width:46px;height:2px;background:var(--red);border-radius:2px}
@@ -342,7 +344,8 @@
     <svg class="curl r" viewBox="0 0 58 26"><path d="M56 22C44 22 40 8 28 8c-8 0-12 6-8 10 3 3 8 0 6-3M40 18c-6 4-14 6-24 2" fill="none" stroke="#a8262c" stroke-width="3" stroke-linecap="round"/><path d="M4 20c6-2 9-8 6-12" fill="none" stroke="#0f3a2a" stroke-width="2.4" stroke-linecap="round"/></svg>
     <svg class="curl l" viewBox="0 0 58 26"><path d="M56 22C44 22 40 8 28 8c-8 0-12 6-8 10 3 3 8 0 6-3M40 18c-6 4-14 6-24 2" fill="none" stroke="#a8262c" stroke-width="3" stroke-linecap="round"/><path d="M4 20c6-2 9-8 6-12" fill="none" stroke="#0f3a2a" stroke-width="2.4" stroke-linecap="round"/></svg>
     <h1>צ'ולנט</h1>
-    <div class="sub">א רוהיגיקייט</div>
+    <div class="sub-a" aria-hidden="true">א</div>
+    <div class="sub"><span class="sr-only">א </span>רוהיגיקייט</div>
     <div class="orn"><i></i><b></b><i></i></div>
   </div>
   <div class="slogan-wrap"><div class="slogan">חמישי<br>בטעם של בית</div></div>
