@@ -139,6 +139,9 @@
   .skip{position:absolute;right:12px;top:-80px;background:#fff;color:#000;padding:8px 14px;border-radius:8px;z-index:200;font-weight:700}
   .skip:focus{top:12px}
   a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:3px solid #ffbf00;outline-offset:2px}
+  .wa-note.must{font-size:1.05rem;font-weight:800;color:#a8262c;background:#fff3f0;border:2px dashed #a8262c;border-radius:12px;padding:10px 12px}
+  .wa-btn.pulse{animation:wapulse 1.4s ease-in-out infinite}
+  @keyframes wapulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
   .consent{font-size:.82rem;color:#5a4a34;text-align:center;margin:8px 0 0}
   .consent a{color:#7a4f00}
   .a11y-btn{position:fixed;left:12px;bottom:84px;z-index:150;width:48px;height:48px;border-radius:50%;border:2px solid #fff;background:#1d4ed8;color:#fff;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.4)}
@@ -476,17 +479,17 @@
 
   <!-- אישור -->
   <div class="card done hidden" id="doneCard">
-    <div class="check">✓</div>
+    <div class="check" id="doneCheck">✓</div>
     <h2 id="doneTitle">הבקשה נשלחה!</h2>
     <p id="doneText">קיבלנו את הבקשה 🍲 המקום נשמר אחרי שנאשר אותו – נחזור אליכם בהקדם</p>
     <div class="summary" id="summary"></div>
-    <p class="note" style="margin-top:14px">👇 כדי שנקבל את ההזמנה גם בוואטסאפ – לחצו ואז "שלח"</p>
-    <a id="waBtn" class="wa-btn" target="_blank" rel="noopener">💬 שלחו את ההזמנה למסעדה בוואטסאפ</a>
-    <div class="cal-row">
+    <p class="note wa-note" id="waNote" style="margin-top:14px">👇 כדי שנקבל את ההזמנה גם בוואטסאפ – לחצו ואז "שלח"</p>
+    <a id="waBtn" class="wa-btn" target="_blank" rel="noopener" onclick="waSent()">💬 שלחו את ההזמנה למסעדה בוואטסאפ</a>
+    <div class="cal-row" id="calRow">
       <a id="calG" class="cal-btn" target="_blank" rel="noopener">📅 הוספה ליומן גוגל</a>
       <a id="calI" class="cal-btn" download="הזמנה-צולנט.ics">🍎 הוספה ליומן אייפון</a>
     </div>
-    <button type="button" class="btn" onclick="newBooking()">הזמנה נוספת</button>
+    <button type="button" class="btn" id="againBtn" onclick="newBooking()">הזמנה נוספת</button>
   </div>
 
   <!-- מילים חמות -->
@@ -773,14 +776,14 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
     btn.disabled = false; btn.textContent = 'הזמנת משלוח';
     const d = new Date(b.date + 'T12:00:00').toLocaleDateString('he-IL');
     const win = opt.textContent;
-    document.getElementById('doneTitle').textContent = 'המשלוח הוזמן!';
-    document.getElementById('doneText').textContent = 'הסיר כבר על האש 🍲 השליח בדרך אליכם בחמישי';
+    doneOk = ['המשלוח הוזמן!', 'הסיר כבר על האש 🍲 השליח בדרך אליכם בחמישי'];
     document.getElementById('summary').innerHTML =
       `<b>${esc(b.name)}</b><br>🍲 ${esc(list.join(', '))}<br>💰 סה״כ ${sum} ₪<br>📍 ${esc(addr)}<br>📅 חמישי ${d} · ${esc(win)}<br>📱 ${esc(b.phone)}` + (extra ? `<br>📝 ${esc(extra)}` : '');
     const msg = `שלום! הזמנתי עכשיו משלוח באתר 🛵\n👤 ${b.name} · ${b.phone}\n🍲 ${list.join(', ')}\n💰 סה״כ ${sum} ₪\n📍 ${addr}\n📅 חמישי ${d} · ${win}` + (extra ? `\n📝 ${extra}` : '');
     document.getElementById('waBtn').href = 'https://wa.me/' + BIZ_WA + '?text=' + encodeURIComponent(msg);
     setCalendar(b.date, b.time, 1, "משלוח צ'ולנט 🛵", list.join(', '), addr);
     lastMode = 'dlv';
+    waStep();
     ['formCard','dlvCard','menuCard'].forEach(c => document.getElementById(c).classList.add('hidden'));
     updCart();
     document.getElementById('doneCard').classList.remove('hidden');
@@ -841,17 +844,38 @@ ${!i.pic && i.desc ? `<div class="ds">${esc(i.desc)}</div>` : ''}
     }
     btn.disabled = false; btn.textContent = 'שליחת בקשה להזמנת שולחן';
     lastMode = 'book';
-    document.getElementById('doneTitle').textContent = 'הבקשה נשלחה!';
-    document.getElementById('doneText').textContent = 'קיבלנו את הבקשה 🍲 המקום נשמר אחרי שנאשר אותו – נחזור אליכם בהקדם';
+    doneOk = ['הבקשה נשלחה!', 'קיבלנו את הבקשה 🍲 המקום נשמר אחרי שנאשר אותו – נחזור אליכם בהקדם'];
     const d = new Date(b.date + 'T12:00:00').toLocaleDateString('he-IL');
     document.getElementById('summary').innerHTML =
       `<b>${esc(b.name)}</b><br>📅 חמישי ${d} בשעה ${b.time}<br>👥 ${b.guests} אנשים<br>📱 ${esc(b.phone)}` + (extra ? `<br>📝 ${esc(extra)}` : '');
     const msg = `שלום! הזמנתי עכשיו שולחן באתר 🍲\n👤 ${b.name} · ${b.phone}\n📅 חמישי ${d} בשעה ${b.time}\n👥 ${b.guests} אנשים` + (extra ? `\n📝 ${extra}` : '');
     document.getElementById('waBtn').href = 'https://wa.me/' + BIZ_WA + '?text=' + encodeURIComponent(msg);
     setCalendar(b.date, b.time, 2, "צ'ולנט א רוהיגיקייט 🍲", `שולחן על שם ${b.name} · ${b.guests} אנשים`, 'בר כוכבא 21, בני ברק');
+    waStep();
     show('doneCard');
     loadSlots();
   });
+
+  // שלב חובה: שליחת ההזמנה לוואטסאפ של העסק
+  let doneOk = ['', ''];
+  function waStep(){
+    document.getElementById('doneTitle').textContent = 'עוד שלב אחד – שליחה בוואטסאפ';
+    document.getElementById('doneText').textContent = 'ההזמנה עוד לא הושלמה! לחצו על הכפתור הירוק, ובוואטסאפ לחצו "שלח".';
+    const n = document.getElementById('waNote'); n.classList.add('must'); n.textContent = '⚠️ חובה: בלי שליחת ההודעה בוואטסאפ ההזמנה לא תטופל';
+    document.getElementById('waBtn').classList.add('pulse');
+    ['doneCheck','calRow','againBtn'].forEach(id => document.getElementById(id).style.display = 'none');
+  }
+  function waSent(){
+    setTimeout(() => {
+      document.getElementById('doneTitle').textContent = doneOk[0];
+      document.getElementById('doneText').textContent = doneOk[1];
+      const n = document.getElementById('waNote'); n.classList.remove('must'); n.textContent = '✅ שלחתם בוואטסאפ? מעולה, קיבלנו. לא נפתח הוואטסאפ? לחצו שוב על הכפתור הירוק';
+      document.getElementById('waBtn').classList.remove('pulse');
+      document.getElementById('doneCheck').style.display = '';
+      document.getElementById('calRow').style.display = '';
+      document.getElementById('againBtn').style.display = '';
+    }, 800);
+  }
 
   function newBooking(){
     if (lastMode === 'dlv') { document.getElementById('dlvForm').reset(); qty.fill(0); drawItems(); fillWindows(); tab('dlv'); window.scrollTo({top:0,behavior:'smooth'}); return; }
