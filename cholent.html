@@ -214,8 +214,8 @@
   .mcard .pr{font-family:'Suez One',serif;color:var(--red);font-size:1.3rem;padding:2px 0 8px}
   .mcard .badge{position:absolute;top:8px;right:8px;background:var(--gold);color:var(--deep);font-size:.72rem;font-weight:800;border-radius:8px;padding:2px 7px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
   .mcard .size{position:absolute;top:8px;left:8px;background:var(--green);color:var(--gold2);font-family:'Suez One',serif;font-size:.9rem;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:2px solid var(--gold)}
-  .deal{margin-top:20px;padding:16px;border-radius:16px;text-align:center;background:linear-gradient(135deg,var(--wine),#7a1f28);border:2px solid var(--gold);color:var(--cream)}
-  .deal-pic{width:150px;height:150px;display:block;margin:-6px auto 0;background:radial-gradient(circle,#fff7e2 0 60%,transparent 61%);border-radius:50%}
+  .deal{margin:4px 0 18px;padding:16px;border-radius:16px;text-align:center;background:linear-gradient(135deg,var(--wine),#7a1f28);border:2px solid var(--gold);color:var(--cream)}
+  .deal-pic{width:100%;max-width:400px;height:auto;display:block;margin:0 auto 10px;background:#fff;border-radius:14px}
   .deal h3{font-family:'Suez One',serif;font-size:1.6rem;color:var(--gold2);line-height:1.1}
   .deal .sub{font-size:.85rem;color:var(--cream2)}
   .deal p{font-weight:700;margin-top:6px}
@@ -386,14 +386,14 @@
   <div class="card hidden" id="menuCard">
     <h2>התפריט</h2>
     <div class="h2orn"><i></i><b></b><i></i></div>
-    <div id="menuList"></div>
     <div class="deal">
-      <svg class="deal-pic" viewBox="0 0 120 120" role="img" aria-label="דיליל שישי"><use href="#p-deal"/></svg>
+      <img class="deal-pic" src="d-deal.webp" alt="דיליל שישי – צ'ולנט, לחמנייה ופחית שתייה" width="400" height="276">
       <h3>דיליל שישי</h3>
       <div class="sub">צ'ולנט חם, פינוק אישי</div>
       <p>צ'ולנט בשרי חצי ליטר + לחמנייה + שתייה בפחית</p>
       <div class="big">60 ₪</div>
     </div>
+    <div id="menuList"></div>
     <div class="note">🥩 המנות כוללות בשר · הבשר בכשרות הרב מחפוד</div>
     <button type="button" class="btn" onclick="tab('book')">להזמנת שולחן</button>
     <button type="button" class="btn" onclick="tab('dlv')">🛵 להזמנת משלוח</button>
@@ -576,7 +576,7 @@
       { icon: 'i-can', pic: 'img:d-soda.webp', emo: '🫧', name: 'סודה', desc: 'בקבוק', price: 12, dlv: true }
     ]}
   ];
-  const DEAL = { pic: 'photo', name: "דיליל שישי (צ'ולנט חצי ליטר + לחמנייה + פחית)", desc: 'הכי משתלם', price: 60, short: 'דיליל שישי' };
+  const DEAL = { pic: 'deal', name: "דיליל שישי (צ'ולנט חצי ליטר + לחמנייה + פחית)", desc: 'הכי משתלם', price: 60, short: 'דיליל שישי' };
   const SLOT_FROM = 18, SLOT_TO = 24;   // שעות הזמנה: 18:00 עד 23:30
   const BIZ_NAME = "צ'ולנט א רוהיגיקייט";
   const BIZ_WA = '972553125739';   // וואטסאפ של העסק – לשם הלקוח שולח את ההזמנה
@@ -638,6 +638,8 @@
   // תפריט
   const picHtml = i => i.pic.startsWith('img:')
     ? `<img src="${i.pic.slice(4)}" alt="${esc(i.name)}" loading="lazy">`
+    : i.pic === 'deal'
+    ? `<img src="d-deal.webp" alt="${esc(i.name)}" loading="lazy" style="object-fit:contain;background:#fff">`
     : i.pic === 'photo'
     ? `<img src="d-cholent.webp" alt="${esc(i.name)}" loading="lazy" style="object-fit:contain;background:#fff;padding:8px;box-sizing:border-box">`
     : `<svg viewBox="${({ 'p-kugel1': '14 26 92 92', 'p-kugel2': '14 26 92 92', 'p-roll': '10 22 100 100' })[i.pic] || '0 0 120 120'}" role="img" aria-label="${esc(i.name)}"><use href="#${i.pic}"/></svg>`;
